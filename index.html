@@ -6,7 +6,7 @@
   <title>SearchHub mobile</title>
   
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes"> <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="SearchHub">
   
   <link rel="apple-touch-icon" href="https://i.ibb.co/239pGpn0/Gemini-Generated-Image-jxewdqjxewdqjxew-1.png">
@@ -30,7 +30,6 @@
   <div id="splashScreen" class="fixed inset-0 z-[9999] bg-black flex items-center justify-center transition-all duration-500 ease-out">
     <img src="https://i.ibb.co/gLNftCyR/Chat-GPT-Image-2026-5-25-20-55-41.png" 
          class="absolute inset-0 w-full h-full object-cover" alt="Splash Logo">
-    
     <div class="absolute bottom-16 text-white text-sm font-bold tracking-widest animate-pulse drop-shadow-lg">
       SYSTEM LOADING...
     </div>
@@ -64,7 +63,7 @@
         <img id="itemImg" src="" class="max-w-full max-h-full object-contain" alt="商品画像">
       </div>
       <div class="flex-1 min-w-0">
-        <div class="text-[11px] text-gray-600 font-bold mb-0.5 truncate" id="itemModel">型番: -</div>
+        <div class="text-[11px] text-gray-800 font-bold mb-0.5 truncate" id="itemModel">型番: -</div>
         <div class="flex items-center gap-1 mb-2">
           <span class="text-[11px] font-bold text-gray-600">ASIN:</span>
           <span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[11px] font-bold" id="itemAsin">B000000000</span>
@@ -156,11 +155,9 @@
     const KEEPA_DOMAIN = 5; 
 
     window.onload = function() {
-      // 最終更新日時のセット
       const now = new Date();
       document.getElementById('lastUpdated').innerText = `最終更新: ${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
       
-      // 🚨 スプラッシュ画面を1.2秒表示させてからシュッと消す演出
       setTimeout(() => {
         const splash = document.getElementById('splashScreen');
         splash.style.opacity = '0';
@@ -168,7 +165,6 @@
       }, 1200);
 
       if (!localStorage.getItem('sh_free_keepa_key')) {
-        // スプラッシュが消える頃合いを見計らって設定画面を出す
         setTimeout(openSettings, 1300);
       }
     };
@@ -179,7 +175,6 @@
       document.getElementById('settingsModal').classList.remove('hidden');
     }
 
-    // 🚨 ←この「closeSettings」関数の形が前回バグってた原因！綺麗に直したで！
     function closeSettings() { 
       document.getElementById('settingsModal').classList.add('hidden'); 
     }
@@ -191,7 +186,6 @@
       closeSettings();
     }
 
-    // 利益計算ロジック
     function calculateProfit() {
       const buy = Number(document.getElementById('calcBuy').value) || 0;
       const exp = Number(document.getElementById('calcExp').value) || 0;
@@ -211,11 +205,11 @@
       document.getElementById('calcProfit').className = profit < 0 ? "text-lg text-red-500 font-bold" : "text-lg text-[#4b9e6c] font-bold";
     }
 
-    // 🚨 下部の真ん中「検索」ボタン：入力されたキーワードでAmazonを直接開く
+    // 🚨 GoogleのWeb検索で「〇〇 amazon」を検索するように変更
     function searchAmazonKeyword() {
       const query = document.getElementById('searchInput').value.trim();
       if (!query) return alert("検索キーワードを入力してください。");
-      window.open(`https://www.amazon.co.jp/s?k=${encodeURIComponent(query)}`, '_blank');
+      window.open(`https://www.google.com/search?q=${encodeURIComponent(query + ' amazon')}`, '_blank');
     }
 
     async function searchKeepa() {
@@ -245,11 +239,15 @@
 
         const product = detailData.products[0];
         
-        // UIへ反映
         document.getElementById('itemAsin').innerText = asin;
-        document.getElementById('itemModel').innerText = product.title ? product.title.substring(0,40) + '...' : '-';
+
+        // 🚨 Keepaから「型番（モデル名）」を取得して表示。無ければタイトルの先頭を表示
+        let modelStr = product.model;
+        if (!modelStr) {
+          modelStr = product.title ? product.title.substring(0, 30) + '...' : '-';
+        }
+        document.getElementById('itemModel').innerText = `型番: ${modelStr}`;
         
-        // 画像取得
         let imgName = "";
         if (product.imagesCSV) {
           imgName = product.imagesCSV.split(',')[0].trim();
