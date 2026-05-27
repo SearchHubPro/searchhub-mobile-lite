@@ -6,7 +6,8 @@
   <title>SearchHub mobile</title>
   
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes"> <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="SearchHub">
   
   <link rel="apple-touch-icon" href="https://i.ibb.co/239pGpn0/Gemini-Generated-Image-jxewdqjxewdqjxew-1.png">
@@ -16,7 +17,7 @@
   
   <style>
     body { background-color: #f3f4f6; font-family: 'Helvetica Neue', Arial, sans-serif; padding-bottom: 80px; }
-    .header-bg { background-color: #1c355e; padding-top: max(12px, env(safe-area-inset-top)); }
+    .header-bg { background-color: #1c355e; }
     .calc-bg { background-color: #333333; }
     .calc-input { background-color: #ffffff; color: #000000; text-align: right; font-weight: bold; border-radius: 4px; padding: 4px 8px; width: 120px; outline: none; }
     .btn-green { background-color: #4b9e6c; }
@@ -35,17 +36,19 @@
     </div>
   </div>
 
-  <div class="header-bg text-white flex justify-between items-center px-4 py-3 sticky top-0 z-50 shadow-md">
-    <button onclick="location.reload()" class="text-xl p-2 rounded-full active:bg-blue-900">
-      <i class="fas fa-sync-alt"></i>
-    </button>
-    <div class="text-center">
-      <h1 class="text-base font-bold tracking-wider">SearchHub mobile</h1>
-      <p class="text-[10px] text-gray-300" id="lastUpdated">最終更新: --</p>
+  <div class="sticky top-0 z-50 w-full shadow-md" style="background-color: #000000; padding-top: env(safe-area-inset-top);">
+    <div class="header-bg text-white flex justify-between items-center px-4 py-3">
+      <button onclick="location.reload()" class="text-xl p-2 rounded-full active:bg-blue-900">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+      <div class="text-center">
+        <h1 class="text-base font-bold tracking-wider">SearchHub mobile</h1>
+        <p class="text-[10px] text-gray-300" id="lastUpdated">最終更新: --</p>
+      </div>
+      <button onclick="openSettings()" class="text-xl p-2 rounded-full active:bg-blue-900">
+        <i class="fas fa-cog"></i>
+      </button>
     </div>
-    <button onclick="openSettings()" class="text-xl p-2 rounded-full active:bg-blue-900">
-      <i class="fas fa-cog"></i>
-    </button>
   </div>
 
   <div class="p-4 bg-white border-b border-gray-200 flex gap-2">
@@ -205,7 +208,6 @@
       document.getElementById('calcProfit').className = profit < 0 ? "text-lg text-red-500 font-bold" : "text-lg text-[#4b9e6c] font-bold";
     }
 
-    // 🚨 GoogleのWeb検索で「〇〇 amazon」を検索するように変更
     function searchAmazonKeyword() {
       const query = document.getElementById('searchInput').value.trim();
       if (!query) return alert("検索キーワードを入力してください。");
@@ -241,7 +243,6 @@
         
         document.getElementById('itemAsin').innerText = asin;
 
-        // 🚨 Keepaから「型番（モデル名）」を取得して表示。無ければタイトルの先頭を表示
         let modelStr = product.model;
         if (!modelStr) {
           modelStr = product.title ? product.title.substring(0, 30) + '...' : '-';
