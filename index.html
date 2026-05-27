@@ -54,7 +54,7 @@
   <div class="p-4 bg-white border-b border-gray-200 flex gap-2">
     <input type="text" id="searchInput" placeholder="ASINや型番を入力..." 
            class="flex-1 p-3 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-    <button onclick="searchKeepa()" class="btn-green text-white font-bold py-3 px-5 rounded-lg active:opacity-80">
+    <button onclick="searchKeepa()" class="btn-green text-white font-bold py-3 px-5 rounded-lg active:opacity-80 transition">
       解析
     </button>
   </div>
@@ -67,16 +67,19 @@
       </div>
       <div class="flex-1 min-w-0">
         <div class="text-[11px] text-gray-800 font-bold mb-0.5 truncate" id="itemModel">型番: -</div>
-        <div class="flex items-center gap-1 mb-2">
+        
+        <div class="flex items-center gap-1 mb-2 cursor-pointer active:opacity-50 transition" onclick="copyAsin()">
           <span class="text-[11px] font-bold text-gray-600">ASIN:</span>
           <span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[11px] font-bold" id="itemAsin">B000000000</span>
+          <i class="far fa-copy text-gray-400 text-[12px] ml-1" id="copyIcon"></i>
         </div>
+        
         <div class="flex items-center justify-between">
           <div class="flex gap-1">
             <span class="border border-orange-500 text-orange-500 text-[10px] font-bold px-1.5 py-0.5 rounded">SRランク</span>
             <span class="bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">標準</span>
           </div>
-          <button class="bg-[#d9534f] text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">規制確認</button>
+          <a id="linkRestrict" href="#" target="_blank" class="bg-[#d9534f] text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">規制確認</a>
         </div>
       </div>
     </div>
@@ -189,6 +192,21 @@
       closeSettings();
     }
 
+    // 🚨 ASINをコピーする関数
+    function copyAsin() {
+      const asin = document.getElementById('itemAsin').innerText;
+      if (asin && asin !== "B000000000") {
+        navigator.clipboard.writeText(asin).then(() => {
+          // コピー成功時にアイコンを一瞬「✅」に変える演出
+          const icon = document.getElementById('copyIcon');
+          icon.className = "fas fa-check text-green-500 text-[12px] ml-1";
+          setTimeout(() => { icon.className = "far fa-copy text-gray-400 text-[12px] ml-1"; }, 1500);
+        }).catch(err => {
+          console.error('コピー失敗:', err);
+        });
+      }
+    }
+
     function calculateProfit() {
       const buy = Number(document.getElementById('calcBuy').value) || 0;
       const exp = Number(document.getElementById('calcExp').value) || 0;
@@ -208,10 +226,20 @@
       document.getElementById('calcProfit').className = profit < 0 ? "text-lg text-red-500 font-bold" : "text-lg text-[#4b9e6c] font-bold";
     }
 
+    // 🚨 「型番 amazon」でGoogle検索する関数
     function searchAmazonKeyword() {
-      const query = document.getElementById('searchInput').value.trim();
-      if (!query) return alert("検索キーワードを入力してください。");
-      window.open(`https://www.google.com/search?q=${encodeURIComponent(query + ' amazon')}`, '_blank');
+      // 画面に表示されている型番を取得（"型番: "の文字を消す）
+      let modelText = document.getElementById('itemModel').innerText.replace('型番: ', '').trim();
+      
+      // もし型番が取れていない場合（"-"など）は、入力窓のキーワードを代用する
+      if (!modelText || modelText === '-') {
+        modelText = document.getElementById('searchInput').value.trim();
+      }
+      
+      if (!modelText) return alert("検索するキーワードがありません。");
+      
+      // 「型番 amazon」で別タブ検索
+      window.open(`https://www.google.com/search?q=${encodeURIComponent(modelText + ' amazon')}`, '_blank');
     }
 
     async function searchKeepa() {
@@ -272,6 +300,9 @@
 
         document.getElementById('linkKeepa').href = `https://keepa.com/#!product/${KEEPA_DOMAIN}-${asin}`;
         document.getElementById('linkAmz').href = `https://www.amazon.co.jp/dp/${asin}`;
+        
+        // 🚨 規制確認（セラーセントラル）のリンクをセット
+        document.getElementById('linkRestrict').href = `https://sellercentral.amazon.co.jp/product-search/search?q=${asin}`;
 
         resultArea.classList.remove('hidden');
 
