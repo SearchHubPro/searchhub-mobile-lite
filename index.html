@@ -23,28 +23,16 @@
     .btn-keepa { background-color: #55a676; }
     .btn-search { background-color: #3f51b5; }
     .btn-amz { background-color: #f7941d; }
-    
-    /* 起動スプラッシュ画面のスタイル */
-    #splashScreen {
-      position: fixed;
-      inset: 0;
-      background-color: #1c355e;
-      z-index: 9999;
-      display: flex;
-      flex-col: ;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.5s ease-out, visibility 0.5s;
-    }
   </style>
 </head>
 <body>
 
-  <div id="splashScreen">
-    <div class="text-center p-6">
-      <img src="https://i.ibb.co/gLNftCyR/Chat-GPT-Image-2026-5-25-20-55-41.png" 
-           class="w-44 h-44 object-contain mx-auto mb-4 rounded-2xl shadow-lg" alt="Splash Logo">
-      <div class="text-white text-sm font-bold tracking-widest animate-pulse">SYSTEM LOADING...</div>
+  <div id="splashScreen" class="fixed inset-0 z-[9999] bg-black flex items-center justify-center transition-all duration-500 ease-out">
+    <img src="https://i.ibb.co/gLNftCyR/Chat-GPT-Image-2026-5-25-20-55-41.png" 
+         class="absolute inset-0 w-full h-full object-cover" alt="Splash Logo">
+    
+    <div class="absolute bottom-16 text-white text-sm font-bold tracking-widest animate-pulse drop-shadow-lg">
+      SYSTEM LOADING...
     </div>
   </div>
 
@@ -80,7 +68,6 @@
         <div class="flex items-center gap-1 mb-2">
           <span class="text-[11px] font-bold text-gray-600">ASIN:</span>
           <span class="bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[11px] font-bold" id="itemAsin">B000000000</span>
-          <i class="far fa-copy text-gray-400 text-[10px]"></i>
         </div>
         <div class="flex items-center justify-between">
           <div class="flex gap-1">
@@ -176,11 +163,14 @@
       // 🚨 スプラッシュ画面を1.2秒表示させてからシュッと消す演出
       setTimeout(() => {
         const splash = document.getElementById('splashScreen');
-        splash.style.opacity = 0;
+        splash.style.opacity = '0';
         setTimeout(() => { splash.style.visibility = 'hidden'; }, 500);
       }, 1200);
 
-      if (!localStorage.getItem('sh_free_keepa_key')) openSettings();
+      if (!localStorage.getItem('sh_free_keepa_key')) {
+        // スプラッシュが消える頃合いを見計らって設定画面を出す
+        setTimeout(openSettings, 1300);
+      }
     };
 
     function openSettings() {
@@ -188,7 +178,12 @@
       if(currentKey) document.getElementById('apiKeyInput').value = currentKey;
       document.getElementById('settingsModal').classList.remove('hidden');
     }
-    document.getElementById('settingsModal').classList.add('hidden'); }
+
+    // 🚨 ←この「closeSettings」関数の形が前回バグってた原因！綺麗に直したで！
+    function closeSettings() { 
+      document.getElementById('settingsModal').classList.add('hidden'); 
+    }
+
     function saveApiKey() {
       const key = document.getElementById('apiKeyInput').value.trim();
       if (!key) return alert("APIキーを入力してください！");
@@ -254,7 +249,7 @@
         document.getElementById('itemAsin').innerText = asin;
         document.getElementById('itemModel').innerText = product.title ? product.title.substring(0,40) + '...' : '-';
         
-        // 画像取得（Keepa新仕様に完全準拠）
+        // 画像取得
         let imgName = "";
         if (product.imagesCSV) {
           imgName = product.imagesCSV.split(',')[0].trim();
