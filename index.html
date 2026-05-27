@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>SearchHub Mobile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background-color: #f3f4f6; font-family: 'Helvetica Neue', Arial, sans-serif; }
+    .header-bar { background-color: #1e3a8a; color: white; position: sticky; top: 0; z-index: 50; }
+  </style>
+</head>
+<body class="pb-20">
+
+  <div class="header-bar flex justify-between items-center px-4 py-3 shadow-md">
+    <button onclick="location.reload()" class="text-xl p-2 hover:bg-blue-800 rounded-full transition">
+      <i class="fas fa-sync-alt"></i>
+    </button>
+    
+    <h1 class="text-lg font-bold tracking-wider">SearchHub Mobile</h1>
+    
+    <button onclick="openSettings()" class="text-xl p-2 hover:bg-blue-800 rounded-full transition">
+      <i class="fas fa-cog"></i>
+    </button>
+  </div>
+
+  <div class="p-4">
+    <div class="flex gap-2 mb-4">
+      <input type="text" id="searchInput" placeholder="型番やASINを入力..." 
+             class="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
+      <button onclick="searchKeepa()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-5 rounded-lg shadow-sm transition">
+        検索
+      </button>
+    </div>
+
+    <div id="resultArea" class="hidden bg-white p-4 rounded-xl shadow-md mb-4 border border-gray-200">
+      </div>
+
+    <div class="mt-6 text-center cursor-pointer hover:opacity-90 transition" onclick="goToProVersion()">
+      <p class="text-xs text-gray-500 font-bold mb-1">＼24時間全自動で新着を狩るなら／</p>
+      <img src="https://via.placeholder.com/800x200/1e3a8a/ffffff?text=SearchHub+Sniper+PRO+%E8%A9%B3%E7%B4%B0%E3%81%AF%E3%81%93%E3%81%A1%E3%82%89%EF%BC%81" 
+           alt="SearchHub Sniper PRO" class="w-full rounded-xl shadow-md border border-gray-300">
+    </div>
+  </div>
+
+  <div id="settingsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center px-4">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
+      <h2 class="text-xl font-bold mb-4 text-gray-800"><i class="fas fa-key text-yellow-500 mr-2"></i>初期設定</h2>
+      <p class="text-sm text-gray-600 mb-4">ご利用にはご自身のKeepa APIキーが必要です。</p>
+      
+      <input type="text" id="apiKeyInput" placeholder="Keepa APIキーを入力" 
+             class="w-full p-3 border border-gray-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      
+      <div class="flex justify-end gap-3">
+        <button onclick="closeSettings()" class="px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-300">キャンセル</button>
+        <button onclick="saveApiKey()" class="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700">保存して開始</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // === ローカルストレージを使ったAPIキー管理 ===
+
+    // ページ読み込み時にAPIキーがあるかチェック
+    window.onload = function() {
+      const apiKey = localStorage.getItem('sh_free_keepa_key');
+      if (!apiKey) {
+        // キーが無ければ設定画面を強制表示
+        openSettings();
+      }
+    };
+
+    function openSettings() {
+      const currentKey = localStorage.getItem('sh_free_keepa_key');
+      if(currentKey) document.getElementById('apiKeyInput').value = currentKey;
+      document.getElementById('settingsModal').classList.remove('hidden');
+    }
+
+    function closeSettings() {
+      document.getElementById('settingsModal').classList.add('hidden');
+    }
+
+    function saveApiKey() {
+      const key = document.getElementById('apiKeyInput').value.trim();
+      if (!key) {
+        alert("APIキーを入力してください！");
+        return;
+      }
+      // GASの代わりにスマホのブラウザ内にキーを保存する
+      localStorage.setItem('sh_free_keepa_key', key);
+      alert("✅ 設定を保存しました！");
+      closeSettings();
+    }
+
+    function searchKeepa() {
+      const apiKey = localStorage.getItem('sh_free_keepa_key');
+      if (!apiKey) {
+        alert("先に右上の歯車マークからKeepa APIキーを設定してください。");
+        openSettings();
+        return;
+      }
+
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) {
+        alert("検索キーワードを入力してください。");
+        return;
+      }
+
+      // ここにKeepa APIを直接叩くロジックを後で追加する
+      alert(`「${query}」を検索する処理を走らせます！\n（裏側でAPIキー: ${apiKey.substring(0,5)}... を使用）`);
+      document.getElementById('resultArea').classList.remove('hidden');
+      document.getElementById('resultArea').innerHTML = `<p class="text-center text-gray-600">検索結果をここに表示します...</p>`;
+    }
+
+    function goToProVersion() {
+      // PRO版の販売ページや公式LINEのURLに飛ばす
+      window.open('https://your-sales-page-url.com', '_blank');
+    }
+  </script>
+</body>
+</html>
