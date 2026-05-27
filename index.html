@@ -95,7 +95,8 @@
       </div>
       <div class="pb-3 border-b border-gray-500 flex justify-between text-gray-400 text-xs mb-3">
         <span>FBA手数料</span>
-        <span>-¥430</span> </div>
+        <span>-¥430</span>
+      </div>
       
       <div class="flex justify-between items-center mb-1 text-blue-300">
         <span>入金目安</span>
@@ -177,8 +178,8 @@
       document.getElementById('calcDeposit').innerText = `¥${deposit.toLocaleString()}`;
       document.getElementById('calcProfit').innerText = `¥${profit.toLocaleString()} (${margin}%)`;
       
-      // 赤字なら色を変える
-      document.getElementById('calcProfit').className = profit < 0 ? "text-lg text-red-500" : "text-lg text-[#4b9e6c]";
+      // 赤字なら色を変える（太字対応済み）
+      document.getElementById('calcProfit').className = profit < 0 ? "text-lg text-red-500 font-bold" : "text-lg text-[#4b9e6c] font-bold";
     }
 
     async function searchKeepa() {
@@ -212,8 +213,14 @@
         document.getElementById('itemAsin').innerText = asin;
         document.getElementById('itemModel').innerText = `タイトル: ${product.title ? product.title.substring(0,30) + '...' : '-'}`;
         
-        const imgName = product.imagesCSV ? product.imagesCSV.split(',')[0] : '';
-        document.getElementById('itemImg').src = imgName ? `https://m.media-amazon.com/images/I/${imgName}` : 'https://via.placeholder.com/150';
+        // 🚨 画像取得の修正版（Keepa新仕様対応）
+        let imgName = "";
+        if (product.imagesCSV) {
+          imgName = product.imagesCSV.split(',')[0].trim();
+        } else if (product.images && product.images.length > 0) {
+          imgName = product.images[0].l || product.images[0].m || product.images[0].s || "";
+        }
+        document.getElementById('itemImg').src = imgName ? `https://images-na.ssl-images-amazon.com/images/I/${imgName}` : 'https://via.placeholder.com/150?text=No+Image';
 
         let usedAvg = 0; let usedLowest = 0;
         if (product.stats) {
