@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>SearchHub Mobile</title>
+  <title>SearchHub Sniper Mobile</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { background-color: #f3f4f6; font-family: 'Helvetica Neue', Arial, sans-serif; }
+    body { background-color: #f4f5f7; font-family: 'Helvetica Neue', Arial, sans-serif; }
     .header-bar { background-color: #1e3a8a; color: white; position: sticky; top: 0; z-index: 50; }
+    .price-box { border-radius: 8px; padding: 12px; text-align: center; font-weight: bold; }
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   </style>
 </head>
 <body class="pb-20">
@@ -17,9 +19,7 @@
     <button onclick="location.reload()" class="text-xl p-2 hover:bg-blue-800 rounded-full transition">
       <i class="fas fa-sync-alt"></i>
     </button>
-    
-    <h1 class="text-lg font-bold tracking-wider">SearchHub Mobile</h1>
-    
+    <h1 class="text-lg font-bold tracking-wider">SearchHub Sniper Mobile</h1>
     <button onclick="openSettings()" class="text-xl p-2 hover:bg-blue-800 rounded-full transition">
       <i class="fas fa-cog"></i>
     </button>
@@ -29,29 +29,27 @@
     <div class="flex gap-2 mb-4">
       <input type="text" id="searchInput" placeholder="型番やASINを入力..." 
              class="flex-1 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
-      <button onclick="searchKeepa()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-5 rounded-lg shadow-sm transition">
+      <button onclick="searchKeepa()" class="bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-5 rounded-lg shadow-sm transition">
         検索
       </button>
     </div>
 
-    <div id="resultArea" class="hidden bg-white p-4 rounded-xl shadow-md mb-4 border border-gray-200">
+    <div id="resultArea" class="hidden mb-6">
       </div>
 
-    <div class="mt-6 text-center cursor-pointer hover:opacity-90 transition" onclick="goToProVersion()">
+    <div class="mt-8 text-center cursor-pointer hover:opacity-90 transition" onclick="goToProVersion()">
       <p class="text-xs text-gray-500 font-bold mb-1">＼24時間全自動で新着を狩るなら／</p>
       <img src="https://via.placeholder.com/800x200/1e3a8a/ffffff?text=SearchHub+Sniper+PRO+%E8%A9%B3%E7%B4%B0%E3%81%AF%E3%81%93%E3%81%A1%E3%82%89%EF%BC%81" 
            alt="SearchHub Sniper PRO" class="w-full rounded-xl shadow-md border border-gray-300">
     </div>
   </div>
 
-  <div id="settingsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center px-4">
+  <div id="settingsModal" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center px-4">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
       <h2 class="text-xl font-bold mb-4 text-gray-800"><i class="fas fa-key text-yellow-500 mr-2"></i>初期設定</h2>
       <p class="text-sm text-gray-600 mb-4">ご利用にはご自身のKeepa APIキーが必要です。</p>
-      
       <input type="text" id="apiKeyInput" placeholder="Keepa APIキーを入力" 
              class="w-full p-3 border border-gray-300 rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500">
-      
       <div class="flex justify-end gap-3">
         <button onclick="closeSettings()" class="px-4 py-2 bg-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-300">キャンセル</button>
         <button onclick="saveApiKey()" class="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700">保存して開始</button>
@@ -60,6 +58,9 @@
   </div>
 
   <script>
+    // 日本のAmazonドメインは 5！
+    const KEEPA_DOMAIN = 5; 
+
     window.onload = function() {
       const apiKey = localStorage.getItem('sh_free_keepa_key');
       if (!apiKey) openSettings();
@@ -71,9 +72,7 @@
       document.getElementById('settingsModal').classList.remove('hidden');
     }
 
-    function closeSettings() {
-      document.getElementById('settingsModal').classList.add('hidden');
-    }
+    function closeSettings() { document.getElementById('settingsModal').classList.add('hidden'); }
 
     function saveApiKey() {
       const key = document.getElementById('apiKeyInput').value.trim();
@@ -83,32 +82,31 @@
       closeSettings();
     }
 
+    // 価格をカンマ区切りにする関数（データなしの場合は「-」）
+    function formatPrice(price) {
+      if (!price || price === -1) return "-";
+      return "¥" + price.toLocaleString();
+    }
+
     async function searchKeepa() {
       const apiKey = localStorage.getItem('sh_free_keepa_key');
-      if (!apiKey) {
-        alert("先に右上の歯車マークからKeepa APIキーを設定してください。");
-        openSettings();
-        return;
-      }
+      if (!apiKey) return openSettings();
 
       let query = document.getElementById('searchInput').value.trim();
-      if (!query) {
-        alert("検索キーワードを入力してください。");
-        return;
-      }
+      if (!query) return alert("検索キーワードを入力してください。");
 
       const resultArea = document.getElementById('resultArea');
       resultArea.classList.remove('hidden');
-      resultArea.innerHTML = `<div class="text-center py-6"><i class="fas fa-spinner fa-spin text-4xl text-blue-600"></i><p class="mt-3 text-gray-600 font-bold">Keepaからデータを取得中...</p></div>`;
+      resultArea.innerHTML = `<div class="text-center py-10 bg-white rounded-xl shadow-sm border border-gray-200"><i class="fas fa-spinner fa-spin text-4xl text-blue-600"></i><p class="mt-3 text-gray-600 font-bold">Keepaからデータを取得中...</p></div>`;
 
       try {
         let asin = query;
         const isAsin = /^[a-zA-Z0-9]{10}$/.test(query);
 
+        // キーワード検索（日本のドメイン5を指定）
         if (!isAsin) {
-           const searchRes = await fetch(`https://api.keepa.com/search?key=${apiKey}&domain=9&type=product&term=${encodeURIComponent(query)}`);
+           const searchRes = await fetch(`https://api.keepa.com/search?key=${apiKey}&domain=${KEEPA_DOMAIN}&type=product&term=${encodeURIComponent(query)}`);
            const searchData = await searchRes.json();
-           
            if (!searchData.products || searchData.products.length === 0) {
                resultArea.innerHTML = `<p class="text-red-500 text-center font-bold py-4">商品が見つかりませんでした。</p>`;
                return;
@@ -116,54 +114,92 @@
            asin = searchData.products[0].asin; 
         }
 
-        const detailRes = await fetch(`https://api.keepa.com/product?key=${apiKey}&domain=9&asin=${asin}&stats=90`);
+        // ASINで商品データを取得（日本のドメイン5を指定）
+        const detailRes = await fetch(`https://api.keepa.com/product?key=${apiKey}&domain=${KEEPA_DOMAIN}&asin=${asin}&stats=90`);
         const detailData = await detailRes.json();
 
-        if (detailData.error) {
-            resultArea.innerHTML = `<p class="text-red-500 text-center font-bold py-4">APIエラー: ${detailData.error.message}</p>`;
-            return;
-        }
-
-        if (!detailData.products || detailData.products.length === 0) {
-            resultArea.innerHTML = `<p class="text-red-500 text-center font-bold py-4">該当するデータがありません。</p>`;
-            return;
-        }
+        if (detailData.error) return resultArea.innerHTML = `<p class="text-red-500 text-center font-bold py-4">APIエラー: ${detailData.error.message}</p>`;
+        if (!detailData.products || detailData.products.length === 0) return resultArea.innerHTML = `<p class="text-red-500 text-center font-bold py-4">該当するデータがありません。</p>`;
 
         const product = detailData.products[0];
         const title = product.title || "商品名不明";
-        const keepaUrl = `https://keepa.com/#!product/9-${asin}`;
+        const keepaUrl = `https://keepa.com/#!product/${KEEPA_DOMAIN}-${asin}`;
         const amzUrl = `https://www.amazon.co.jp/dp/${asin}`;
         
-        const imgName = product.imagesCSV ? product.imagesCSV.split(',')[0] : '';
+        // 画像URLの修正（複数ある場合は1枚目を取得）
+        let imgName = "";
+        if (product.imagesCSV) {
+          imgName = product.imagesCSV.split(',')[0];
+        }
         const imgUrl = imgName ? `https://m.media-amazon.com/images/I/${imgName}` : 'https://via.placeholder.com/150';
 
-        const graphUrl = `https://graph.keepa.com/pricehistory.png?asin=${asin}&domain=9&salesrank=1&new=1&used=1&range=90`;
+        // グラフ画像（日本のドメイン5を指定）
+        const graphUrl = `https://graph.keepa.com/pricehistory.png?asin=${asin}&domain=${KEEPA_DOMAIN}&salesrank=1&new=1&used=1&range=90`;
 
+        // 価格データの抽出（statsオブジェクトから）
+        let usedAvg = "-";
+        let usedLowest = "-";
+        if (product.stats) {
+          if (product.stats.avg90 && product.stats.avg90[2]) usedAvg = formatPrice(product.stats.avg90[2]);
+          if (product.stats.current && product.stats.current[2]) usedLowest = formatPrice(product.stats.current[2]);
+        }
+
+        // スナイパー完全再現のUI出力
         resultArea.innerHTML = `
-          <div class="flex items-start gap-4 mb-4">
-            <img src="${imgUrl}" class="w-24 h-24 object-contain rounded border p-1 bg-white" alt="商品画像">
-            <div>
-              <p class="text-sm font-bold text-gray-800 leading-snug line-clamp-3">${title}</p>
-              <div class="mt-2">
-                <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">ASIN: ${asin}</span>
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-4">
+            <div class="flex gap-4 items-start">
+              <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center border border-gray-100 rounded-lg bg-white p-1">
+                <img src="${imgUrl}" class="max-w-full max-h-full object-contain" alt="商品画像">
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">${title}</p>
+                
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded text-xs font-bold shadow-sm">
+                    ASIN: ${asin}
+                  </span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <div class="flex gap-1">
+                    <span class="border border-orange-500 text-orange-500 text-[10px] font-bold px-1.5 py-0.5 rounded">SRランク</span>
+                    <span class="bg-green-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm">標準</span>
+                  </div>
+                  <a href="https://sellercentral.amazon.co.jp/product-search/search?q=${asin}" target="_blank" class="bg-red-500 hover:bg-red-600 text-white text-[11px] font-bold px-3 py-1.5 rounded shadow-sm transition">
+                    規制確認
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-          
-          <div class="mb-4">
-             <img src="${graphUrl}" class="w-full rounded border border-gray-300 shadow-sm" alt="Keepa波形">
+
+          <div class="flex gap-3 mb-4">
+            <div class="flex-1 bg-blue-50 border border-blue-100 price-box shadow-sm">
+              <div class="text-[11px] text-blue-700 font-bold mb-1">中古平均(90)</div>
+              <div class="text-xl text-blue-900">${usedAvg}</div>
+            </div>
+            <div class="flex-1 bg-red-50 border border-red-100 price-box shadow-sm">
+              <div class="text-[11px] text-red-600 font-bold mb-1">中古最安値</div>
+              <div class="text-xl text-red-700">${usedLowest}</div>
+            </div>
           </div>
           
-          <div class="grid grid-cols-2 gap-3">
-            <a href="${keepaUrl}" target="_blank" class="flex justify-center items-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow-md transition">
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-4 p-2">
+             <img src="${graphUrl}" class="w-full h-auto object-contain" alt="Keepa波形">
+          </div>
+          
+          <div class="flex gap-3">
+            <a href="${keepaUrl}" target="_blank" class="flex-1 flex justify-center items-center bg-[#258a5e] hover:bg-green-700 text-white font-bold py-3 rounded-xl shadow-sm transition text-sm">
               <i class="fas fa-chart-line mr-2"></i> Keepa
             </a>
-            <a href="${amzUrl}" target="_blank" class="flex justify-center items-center bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-lg shadow-md transition">
+            <button onclick="document.getElementById('searchInput').focus()" class="flex-1 flex justify-center items-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-sm transition text-sm">
+              <i class="fas fa-search mr-2"></i> 検索
+            </button>
+            <a href="${amzUrl}" target="_blank" class="flex-1 flex justify-center items-center bg-[#f99017] hover:bg-orange-600 text-white font-bold py-3 rounded-xl shadow-sm transition text-sm">
               <i class="fab fa-amazon mr-2"></i> Amazon
             </a>
           </div>
         `;
-
       } catch (error) {
         resultArea.innerHTML = `<p class="text-red-500 text-center font-bold py-4">通信エラーが発生しました。<br>APIキーが正しいか確認してください。</p>`;
       }
