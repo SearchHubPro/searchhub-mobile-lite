@@ -813,39 +813,18 @@
         window.scrollTo(0, parseInt(savedScroll, 10)); 
       }, 100);
 
-      const lastSniperTab = TempStorage.get("sh_last_sniper_tab", "sniper-mercari");
-      const sniperBtn = document.querySelector(`button[onclick*="'${lastSniperTab}'"]`);
-      if(sniperBtn) switchTab(lastSniperTab, sniperBtn, 'view-sniper');
-
-      const lastWatcherTab = TempStorage.get("sh_last_watcher_tab", "watcher-mercari");
-      const watcherBtn = document.querySelector(`button[onclick*="'${lastWatcherTab}'"]`);
-      if(watcherBtn) switchTab(lastWatcherTab, watcherBtn, 'view-watcher');
-
-      window.addEventListener('scroll', () => {
-        TempStorage.set("sh_scroll_pos_" + currentActiveView, window.scrollY);
-      }, {passive: true});
-
-      const urlSniper = AppStorage.get("sh_sniper_url", ""); const url10 = AppStorage.get("sh_tensite_url", "");
-      
-      if(urlSniper || url10) { fetchDashboardData(); }
-
-      setTimeout(() => { hideLoader(); }, 8000);
-      if(!urlSniper && !url10) {
+      // ▼ 修正：Keepa APIの登録だけをチェックして起動させる ▼
+      const keepaKey = AppStorage.get("sh_keepa", "");
+      if(!keepaKey) {
         setTimeout(() => { hideLoader(); document.getElementById("lastUpdate").innerText = "設定未完了"; openConfig(); }, 1500);
       } else {
-        setTimeout(() => { syncPatrolData(); }, 800);
+        setTimeout(() => { hideLoader(); document.getElementById("lastUpdate").innerText = "準備完了"; }, 800);
       }
     });
 
+    // ▼ 修正：画面切り替え時のGAS通信を完全ストップ ▼
     document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible") {
-        const urlSniper = AppStorage.get("sh_sniper_url", ""); 
-        const url10 = AppStorage.get("sh_tensite_url", "");
-        if (urlSniper || url10) {
-          syncPatrolData();
-          fetchDashboardData(); 
-        }
-      }
+      // GAS通信を削除したため何もしない
     });
 
     async function syncPatrolData() {
@@ -2112,6 +2091,29 @@ document.getElementById("regPurchaseUrl").value = "";
         } else { alert("通知ブロック中。"); btn.innerText = "🔔 通知許可する"; btn.disabled = false; }
       } catch (err) { alert("エラー\n" + err.message); btn.innerText = "🔔 通知許可する"; btn.disabled = false; }
     }
+// ==========================================
+    // 🚀 お試し版専用：GAS通信・連携機能の強制無効化
+    // ==========================================
+    fetchDashboardData = async function() {};
+    syncPatrolData = async function() {};
+    syncMarkAsReadToGAS = function() {};
+    
+    // 押したら「製品版限定」のアラートを出すように上書き
+    toggleDiscord = function() { alert("🔒 この機能は製品版限定やで！"); };
+    searchHistory = function() { alert("🔒 販売履歴の検索は製品版限定やで！"); };
+    sendToManager = function() { alert("🔒 スプレッドシートへの仕入登録は製品版限定やで！"); };
+    loadInventoryPrice = function() { alert("🔒 現在の在庫価格との連携は製品版限定やで！"); };
+    loadMonthlyData = function() { alert("🔒 月別データ詳細の確認は製品版限定やで！"); };
+    loadResearcherData = function() { alert("🔒 Researcher候補の精査は製品版限定やで！"); };
+    openExpenseModal = function() { alert("🔒 経費のサクッと入力は製品版限定やで！"); };
+    updateKeepaInventory = function() { alert("🔒 Keepa在庫更新機能は製品版限定やで！"); };
+    
+    // リロードボタンはクルッと回る演出だけ残す
+    forceReload = function(btn) { 
+      btn.style.transform = "rotate(360deg)"; 
+      setTimeout(() => btn.style.transform = "rotate(0deg)", 500); 
+    };
+
   </script>
 </body>
 </html>
