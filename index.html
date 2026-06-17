@@ -2092,28 +2092,47 @@ document.getElementById("regPurchaseUrl").value = "";
       } catch (err) { alert("エラー\n" + err.message); btn.innerText = "🔔 通知許可する"; btn.disabled = false; }
     }
 // ==========================================
-    // 🚀 お試し版専用：GAS通信・連携機能の強制無効化
+    // 🚀 お試し版専用：機能制限＆販売ページへの強制リダイレクト
     // ==========================================
+    const PRO_URL = "https://tips.jp/u/kinkin1135/a/sedori-automation/d/dac";
+
+    function redirectToPro() {
+      // ユーザーがリサーチ中のデータを失わないよう、別タブで販売ページを開く
+      window.open(PRO_URL, '_blank');
+    }
+
+    // ▼ 画面の切り替えシステム（openView）を根こそぎ乗っ取る！ ▼
+    const originalOpenView = openView;
+    openView = function(viewId, isBack = false) {
+      // 「ホーム画面」と「Amazonリサーチ画面」以外へ行こうとしたら強制送還！
+      if (viewId !== 'view-home' && viewId !== 'view-amazon') {
+        redirectToPro();
+        return;
+      }
+      // 許可された画面なら通常通り移動
+      originalOpenView(viewId, isBack);
+    };
+
+    // ▼ 裏側の不要な通信処理は完全に沈黙させる ▼
     fetchDashboardData = async function() {};
     syncPatrolData = async function() {};
     syncMarkAsReadToGAS = function() {};
-    
-    // 押したら「製品版限定」のアラートを出すように上書き
-    toggleDiscord = function() { alert("🔒 この機能は製品版限定やで！"); };
-    searchHistory = function() { alert("🔒 販売履歴の検索は製品版限定やで！"); };
-    sendToManager = function() { alert("🔒 スプレッドシートへの仕入登録は製品版限定やで！"); };
-    loadInventoryPrice = function() { alert("🔒 現在の在庫価格との連携は製品版限定やで！"); };
-    loadMonthlyData = function() { alert("🔒 月別データ詳細の確認は製品版限定やで！"); };
-    loadResearcherData = function() { alert("🔒 Researcher候補の精査は製品版限定やで！"); };
-    openExpenseModal = function() { alert("🔒 経費のサクッと入力は製品版限定やで！"); };
-    updateKeepaInventory = function() { alert("🔒 Keepa在庫更新機能は製品版限定やで！"); };
-    
-    // リロードボタンはクルッと回る演出だけ残す
+
+    // ▼ 各種ボタンのアクションも、すべて販売ページへの強制ジャンプに書き換え！ ▼
+    toggleDiscord = redirectToPro;       // Discord連携ボタン
+    searchHistory = redirectToPro;       // 販売履歴リサーチボタン
+    sendToManager = redirectToPro;       // Managerへ仕入れ登録ボタン
+    loadInventoryPrice = redirectToPro;  // 価格改定の更新ボタン
+    loadMonthlyData = redirectToPro;     // 月別データの更新ボタン
+    loadResearcherData = redirectToPro;  // Researcherの更新ボタン
+    openExpenseModal = redirectToPro;    // ヘッダーの経費ボタン
+    updateKeepaInventory = redirectToPro;// Keepa在庫更新ボタン
+
+    // リロードボタンはクルッと回る演出だけ残しておく（押した感触用）
     forceReload = function(btn) { 
       btn.style.transform = "rotate(360deg)"; 
       setTimeout(() => btn.style.transform = "rotate(0deg)", 500); 
     };
-
   </script>
 </body>
 </html>
