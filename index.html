@@ -396,11 +396,7 @@
       <label>Keepa APIキー</label>
       <input type="text" id="cfgKeepa" placeholder="あなたのKeepaAPIキー">
       
-      <div style="margin-top:16px; font-size:12px; color:#718096; background:#f8fafc; padding:8px; border-radius:6px; border:1px solid #e2e8f0;">
-        ※お試し版ではKeepa APIの設定のみで、Amazonリサーチ機能がフルで使えます！
-      </div>
-
-      <div class="modal-actions">
+      <div class="modal-actions" style="margin-top:24px;">
         <button style="background:#e2e8f0; color:#4a5568;" onclick="closeConfig()">閉じる</button>
         <button style="background:#1a365d; color:white;" onclick="saveConfig()">設定を保存</button>
       </div>
@@ -921,11 +917,15 @@
       document.getElementById("configModal").style.display = "flex";
     }
 
+    function closeConfig() { document.getElementById("configModal").style.display = "none"; }
+    
     function saveConfig() {
+      // KeepaのAPIキーだけを保存
       AppStorage.set("sh_keepa", document.getElementById("cfgKeepa").value.trim()); 
+      
+      // 画面を閉じて完了メッセージを出す
       closeConfig(); 
-      // ※通信処理(syncPatrolData等)は削除
-      alert("設定を保存しました！");
+      alert("✅ Keepa APIキーを保存しました！");
     }
     
     function updateDiscordBtnUI(status) {
