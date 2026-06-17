@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>SearchHub Mobile</title>
+  <title>SearchHub Mobile Lite</title>
   
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -171,7 +171,7 @@
         <button class="header-btn" onclick="openExpenseModal()"><i class="fas fa-file-invoice-dollar"></i></button>
       </div>
       <div class="header-center">
-        <h1 id="headerTitle">SearchHub Mobile</h1>
+        <h1 id="headerTitle">SearchHub Mobile Lite</h1>
         <div class="last-update" id="lastUpdate">待機中...</div>
       </div>
       <div class="header-right">
@@ -190,12 +190,15 @@
       </div>
       
       <div id="homeGraphContent">
-        <img src="https://i.ibb.co/vxNNg50F/S-371736581-0.jpg" alt="回転率デモ" style="width:100%; border-radius:8px; display:block; border:1px solid #e2e8f0; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+        <img id="demoGraphImg" src="https://i.ibb.co/gbGLK8FH/S-371744773-0.jpg" alt="デモ画像" style="width:100%; border-radius:8px; display:block; border:1px solid #e2e8f0; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
         
         <div style="text-align:center; font-size:12px; color:#e53e3e; font-weight:bold; margin-top:12px;">
           🔒 製品版ではリアルタイムでグラフ化！
         </div>
       </div>
+      
+      <div id="homeMonthTabsArea" style="display:none;"></div>
+    </div>
       
       <div id="homeMonthTabsArea" style="display:none;"></div>
     </div>
@@ -708,7 +711,7 @@
       
       if(viewId === 'view-home') {
         backBtn.style.display = 'none';
-        titleEl.innerText = 'SearchHub Mobile'; 
+        titleEl.innerText = 'SearchHub Mobile Lite'; 
       } else {
         backBtn.style.display = 'flex';
         if(viewId === 'view-sniper') titleEl.innerText = 'SearchHub Sniper';
@@ -807,7 +810,7 @@
       updateDiscordBtnUI(AppStorage.get("sh_discord_toggle", "off"));
       setupSwipe();
       
-      document.getElementById('headerTitle').innerText = 'SearchHub Mobile';
+      document.getElementById('headerTitle').innerText = 'SearchHub Mobile Lite';
 
       const lastView = TempStorage.get("sh_last_view", "view-home");
       openView(lastView, true);
@@ -2137,6 +2140,29 @@ document.getElementById("regPurchaseUrl").value = "";
       btn.style.transform = "rotate(360deg)"; 
       setTimeout(() => btn.style.transform = "rotate(0deg)", 500); 
     };
+// ==========================================
+    // 🚀 お試し版専用：ホーム画面の画像切り替えシステム
+    // ==========================================
+    const demoImages = {
+      'turnover': 'https://i.ibb.co/gbGLK8FH/S-371744773-0.jpg',
+      'purchase': 'https://i.ibb.co/VpSP6pR9/S-371744772-0.jpg',
+      'sales':  'https://i.ibb.co/R4CY4zgG/S-371744771-0.jpg'
+    };
+
+    switchHomeTab = function(mode, btn) {
+      // タブの青い線を切り替える
+      document.querySelectorAll('.home-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      // 画像の中身をスッと差し替える
+      const imgEl = document.getElementById('demoGraphImg');
+      if (imgEl) {
+        imgEl.src = demoImages[mode];
+      }
+    };
+
+    // ▼ これが超重要！元の「グラフを描画する処理」を無効化して、画像が消えるのを防ぐ ▼
+    updateHomeView = function() {};
   </script>
 </body>
 </html>
