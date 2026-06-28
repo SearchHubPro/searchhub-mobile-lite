@@ -2099,7 +2099,7 @@ document.getElementById("regPurchaseUrl").value = "";
       } catch (err) { alert("エラー\n" + err.message); btn.innerText = "🔔 通知許可する"; btn.disabled = false; }
     }
 // ==========================================
-    // 🚀 お試し版専用：機能制限＆販売ページへの強制リダイレクト
+    // 🚀 お試し版専用：機能制限＆販売ページへの強制リダイレクト（Watcher & Researcher 解放版）
     // ==========================================
     const PRO_URL = "https://tips.jp/u/kinkin1135/a/sedori-automation/d/dac";
 
@@ -2111,8 +2111,8 @@ document.getElementById("regPurchaseUrl").value = "";
     // ▼ 画面の切り替えシステム（openView）を根こそぎ乗っ取る！ ▼
     const originalOpenView = openView;
     openView = function(viewId, isBack = false) {
-      // 「ホーム画面」と「Amazonリサーチ画面」以外へ行こうとしたら強制送還！
-      if (viewId !== 'view-home' && viewId !== 'view-amazon') {
+      // 🔓 「ホーム」「Amazonリサーチ」「Watcher」「Researcher精査」以外へ行こうとしたら強制送還！
+      if (viewId !== 'view-home' && viewId !== 'view-amazon' && viewId !== 'view-watcher' && viewId !== 'view-researcher') {
         redirectToPro();
         return;
       }
@@ -2121,9 +2121,9 @@ document.getElementById("regPurchaseUrl").value = "";
     };
 
     // ▼ 裏側の不要な通信処理は完全に沈黙させる ▼
-    fetchDashboardData = async function() {};
-    syncPatrolData = async function() {};
-    syncMarkAsReadToGAS = function() {};
+    fetchDashboardData = async function() {}; // グラフ用通信は沈黙させたまま！
+    // syncPatrolData = async function() {}; // 🌟 コメントアウトしてWatcherの通信を復活！
+    // syncMarkAsReadToGAS = function() {}; // 🌟 コメントアウトして既読機能の通信を復活！
 
     // ▼ 各種ボタンのアクションも、すべて販売ページへの強制ジャンプに書き換え！ ▼
     toggleDiscord = redirectToPro;       // Discord連携ボタン
@@ -2131,7 +2131,7 @@ document.getElementById("regPurchaseUrl").value = "";
     sendToManager = redirectToPro;       // Managerへ仕入れ登録ボタン
     loadInventoryPrice = redirectToPro;  // 価格改定の更新ボタン
     loadMonthlyData = redirectToPro;     // 月別データの更新ボタン
-    loadResearcherData = redirectToPro;  // Researcherの更新ボタン
+    // loadResearcherData = redirectToPro;  // 🌟 コメントアウトしてResearcherの更新ボタンを復活！
     openExpenseModal = redirectToPro;    // ヘッダーの経費ボタン
     updateKeepaInventory = redirectToPro;// Keepa在庫更新ボタン
 
@@ -2162,7 +2162,7 @@ document.getElementById("regPurchaseUrl").value = "";
     };
 
     // ▼ これが超重要！元の「グラフを描画する処理」を無効化して、画像が消えるのを防ぐ ▼
-    updateHomeView = function() {};
-  </script>
+    updateHomeView = function() {}; 
+ </script>
 </body>
 </html>
