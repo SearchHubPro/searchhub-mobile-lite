@@ -400,9 +400,16 @@
   <div id="configModal" class="modal">
     <div class="modal-content">
       <h3>⚙️ アプリ基本設定</h3>
+      
       <label>Keepa APIキー</label>
       <input type="text" id="cfgKeepa" placeholder="あなたのKeepaAPIキー">
       
+      <label style="color: #2b6cb0; margin-top: 15px;">🔗 SearchHub : Researcher LiteのURL</label>
+      <input type="url" id="cfgResearcherUrl" placeholder="https://docs.google.com/spreadsheets/...">
+
+      <label style="color: #07A27B; margin-top: 15px;">🔗 SearchHub : Researcher LiteのGASURL</label>
+      <input type="url" id="cfgGasUrl" placeholder="https://script.google.com/macros/s/.../exec">
+
       <div class="modal-actions" style="margin-top:24px;">
         <button style="background:#e2e8f0; color:#4a5568;" onclick="closeConfig()">閉じる</button>
         <button style="background:#1a365d; color:white;" onclick="saveConfig()">設定を保存</button>
@@ -900,18 +907,20 @@
     
     function openConfig() {
       document.getElementById("cfgKeepa").value = AppStorage.get("sh_keepa", ""); 
+      document.getElementById("cfgResearcherUrl").value = AppStorage.get("sh_researcher_url", ""); 
+      document.getElementById("cfgGasUrl").value = AppStorage.get("sh_tensite_url", ""); 
       document.getElementById("configModal").style.display = "flex";
     }
 
     function closeConfig() { document.getElementById("configModal").style.display = "none"; }
     
     function saveConfig() {
-      // KeepaのAPIキーだけを保存
       AppStorage.set("sh_keepa", document.getElementById("cfgKeepa").value.trim()); 
-      
-      // 画面を閉じて完了メッセージを出す
+      AppStorage.set("sh_researcher_url", document.getElementById("cfgResearcherUrl").value.trim()); 
+      AppStorage.set("sh_tensite_url", document.getElementById("cfgGasUrl").value.trim()); 
       closeConfig(); 
-      alert("✅ Keepa APIキーを保存しました！");
+      alert("✅ 設定を保存しました！");
+      syncPatrolData(); 
     }
     
     function updateDiscordBtnUI(status) {
@@ -2162,7 +2171,7 @@ document.getElementById("regPurchaseUrl").value = "";
     };
 
     // ▼ これが超重要！元の「グラフを描画する処理」を無効化して、画像が消えるのを防ぐ ▼
-    updateHomeView = function() {}; 
- </script>
+    updateHomeView = function() {};
+  </script>
 </body>
 </html>
