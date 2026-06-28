@@ -2130,9 +2130,9 @@ document.getElementById("regPurchaseUrl").value = "";
     };
 
     // ▼ 裏側の不要な通信処理は完全に沈黙させる ▼
-    fetchDashboardData = async function() {}; // グラフ用通信は沈黙させたまま！
-    // syncPatrolData = async function() {}; // 🌟 コメントアウトしてWatcherの通信を復活！
-    // syncMarkAsReadToGAS = function() {}; // 🌟 コメントアウトして既読機能の通信を復活！
+    // fetchDashboardData = async function() {}; // 🌟 ここに「//」を付けて赤丸チェックの通信を復活！
+    // syncPatrolData = async function() {}; // (Watcher用：復活済)
+    // syncMarkAsReadToGAS = function() {}; // (既読用：復活済)
 
     // ▼ 各種ボタンのアクションも、すべて販売ページへの強制ジャンプに書き換え！ ▼
     toggleDiscord = redirectToPro;       // Discord連携ボタン
