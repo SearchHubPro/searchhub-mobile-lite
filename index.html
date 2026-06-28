@@ -286,11 +286,24 @@
   <div id="view-researcher" class="view">
     <div class="content">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <span style="font-size:12px; font-weight:bold; color:#4a5568;" id="resCount">候補を読み込み中...</span>
+        
+        <div style="display:flex; gap:12px; align-items:center;">
+          <span style="font-size:12px; font-weight:bold; color:#4a5568;" id="resCount">候補を読み込み中...</span>
+          
+          <label id="mini-drop-zone-keepa" style="background:#f8fafc; border: 2px dashed #cbd5e0; color:#4a5568; padding:4px 12px; border-radius:6px; font-size:11px; font-weight:bold; cursor:pointer; display:flex; align-items:center; transition: all 0.2s;" 
+                 ondragover="handleDragOverKeepaMini(event)" 
+                 ondragleave="handleDragLeaveKeepaMini(event)" 
+                 ondrop="handleDropKeepaMini(event)">
+            <i class="fas fa-file-upload" style="margin-right: 6px;"></i> KeepaCSVをドロップ
+            <input type="file" style="display:none;" accept=".csv" onchange="processKeepaCSV(event.target.files[0])">
+          </label>
+        </div>
+
         <div style="display:flex; gap:4px;">
           <button onclick="copyAsins20()" style="background:#f7941d; color:white; border:none; padding:8px 12px; border-radius:6px; font-size:11px; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.1);"><i class="fas fa-copy"></i> ASIN20件コピー</button>
           <button onclick="removeCheckedItems()" style="background:#e53e3e; color:white; border:none; padding:8px 12px; border-radius:6px; font-size:11px; font-weight:bold; box-shadow:0 1px 3px rgba(0,0,0,0.1);"><i class="fas fa-trash-alt"></i> チェック削除</button>
         </div>
+        
       </div>
       
       <div id="researcherResult">
@@ -1948,6 +1961,115 @@ document.getElementById("regPurchaseUrl").value = "";
         ptrEl.style.top = '-50px'; 
       }
     }, {passive: true});
+
+    // ==========================================
+    // 🚀 Keepa ミニドロップ枠の見た目制御 ＆ CSV解析 (Lite版)
+    // ==========================================
+    function handleDragOverKeepaMini(e) {
+      e.preventDefault(); e.stopPropagation();
+      e.currentTarget.style.backgroundColor = '#ebf8ff';
+      e.currentTarget.style.borderColor = '#3182ce';
+    }
+
+    function handleDragLeaveKeepaMini(e) {
+      e.preventDefault(); e.stopPropagation();
+      e.currentTarget.style.backgroundColor = '#f8fafc';
+      e.currentTarget.style.borderColor = '#cbd5e0';
+    }
+
+    function handleDropKeepaMini(e) {
+      e.preventDefault(); e.stopPropagation();
+      e.currentTarget.style.backgroundColor = '#f8fafc';
+      e.currentTarget.style.borderColor = '#cbd5e0';
+      
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) {
+        processKeepaCSV(files[0]);
+      }
+    }
+
+    function processKeepaCSV(file) {
+      if (!file.name.toLowerCase().endsWith('.csv')) {
+        alert("⚠️ CSVファイルを入れてや！");
+        return;
+      }
+
+      const dropLabel = document.getElementById('mini-drop-zone-keepa');
+      const originalText = dropLabel.innerHTML;
+      dropLabel.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 6px; color:#a855f7;"></i> 解析中...';
+
+      const reader = new FileReader();
+
+      reader.onload = async function(e) {
+        let text = e.target.result;
+        const lines = text.split(/\r?\n/);
+        const asins = [];
+
+        lines.forEach(line => {
+          const cleanLine = line.replace(/["']/g, '').trim();
+          if (cleanLine && cleanLine !== 'ASIN' && cleanLine.length === 10) {
+            asins.push(cleanLine);
+          }
+        });
+
+        if (asins.length === 0) {
+          alert("⚠️ 有効なASINが見つからんかったで！");
+          dropLabel.innerHTML = originalText;
+          return;
+        }
+
+        if(!confirm(`📦 ${asins.length}件のASINを抽出したで！\nASIN検索sheetにセットして、自動リサーチを開始してもええか？`)) {
+          dropLabel.innerHTML = originalText;
+          return;
+        }
+
+        dropLabel.innerHTML = '<i class="fas fa-paper-plane" style="margin-right: 6px; color:#a855f7;"></i> 送信中...';
+
+        const researcherUrl = AppStorage.get("sh_researcher_url", "");
+        // 💡 Lite版仕様：通常のGAS URLを使用する
+        let targetGasUrl = AppStorage.get("sh_tensite_url", "") || AppStorage.get("sh_sniper_url", "");
+
+        if (!researcherUrl || !targetGasUrl) {
+          alert("⚙️ 設定画面を開いてURLを保存してな！");
+          dropLabel.innerHTML = originalText;
+          return;
+        }
+
+        try {
+          const res = await fetch(targetGasUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // 🛡️ 通信を確実に通すための呪文
+            body: JSON.stringify({
+              command: 'startKeepaAutoResearch',
+              ssUrl: researcherUrl,
+              asins: asins
+            })
+          });
+
+          // エラーの正体を正確に掴むために文字として受け取る
+          const responseText = await res.text();
+          let json;
+          try {
+            json = JSON.parse(responseText);
+          } catch(err) {
+            throw new Error(responseText.substring(0, 50)); 
+          }
+
+          if (json.success) {
+            alert(`✅ ${asins.length}件のASINをセットして、自動リサーチをスタートしたで！！\n（裏側で現場監督が走り出しました！）`);
+            if (typeof loadResearcherData === 'function') loadResearcherData();
+          } else {
+            alert(`❌ 自動リサーチ開始エラー:\n${json.message}`);
+          }
+        } catch (error) {
+          alert("❌ 通信エラーの正体:\nGASエラー発生中: " + error.message);
+        } finally {
+          dropLabel.innerHTML = originalText;
+        }
+      };
+
+      reader.readAsText(file);
+    }
 　　
 　　async function updateKeepaInventory() {
       const btn = document.getElementById('keepaBtn');
