@@ -436,16 +436,16 @@
       <div id="confirmDetails" style="font-size:13px; color:#4a5568; margin-bottom:12px; line-height:1.6; background:#f8fafc; padding:10px; border-radius:6px; border:1px solid #e2e8f0;">
         </div>
 
-      <label>仕入れ先を選択 (情報sheetから取得)</label>
-      <select id="supplierSelect" style="width:100%; padding:10px; margin-top:4px; margin-bottom:12px; border:1px solid #ccc; border-radius:6px; font-size:14px; background:#fff; outline:none;">
-        <option value="">🔄 リストを読込中...</option>
+      <label>仕入れ先を選択 <span style="color:#e53e3e; font-size:10px;">🔒PRO版限定</span></label>
+      <select id="supplierSelect" style="width:100%; padding:10px; margin-top:4px; margin-bottom:12px; border:1px solid #ccc; border-radius:6px; font-size:14px; background:#f8fafc; color:#a0aec0; outline:none;" disabled>
+        <option value="">🔒 選択不可</option>
       </select>
 
-      <label>購入URL (E列)</label>
-      <input type="text" id="regPurchaseUrl" placeholder="https://..." oninput="autoExtractId()" style="width:100%; padding:10px; margin-top:4px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px; font-size:14px; background:#fff; outline:none; box-sizing:border-box;">
+      <label>購入URL (E列) <span style="color:#e53e3e; font-size:10px;">🔒PRO版限定</span></label>
+      <input type="text" id="regPurchaseUrl" placeholder="🔒 PRO版で利用可能" style="width:100%; padding:10px; margin-top:4px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px; font-size:14px; background:#f8fafc; outline:none; box-sizing:border-box;" disabled>
 
-      <label>商品ID (F列)</label>
-      <input type="text" id="regPurchaseId" placeholder="m123456789など" style="width:100%; padding:10px; margin-top:4px; margin-bottom:16px; border:1px solid #ccc; border-radius:6px; font-size:14px; background:#fff; outline:none; box-sizing:border-box;">
+      <label>商品ID (F列) <span style="color:#e53e3e; font-size:10px;">🔒PRO版限定</span></label>
+      <input type="text" id="regPurchaseId" placeholder="🔒 PRO版で利用可能" style="width:100%; padding:10px; margin-top:4px; margin-bottom:16px; border:1px solid #ccc; border-radius:6px; font-size:14px; background:#f8fafc; outline:none; box-sizing:border-box;" disabled>
       <div class="modal-actions">
         <button style="background:#e2e8f0; color:#4a5568;" onclick="closeConfirmModal()">キャンセル</button>
         <button id="executeRegBtn" style="background:#1a365d; color:white;" onclick="executeRegistration()">この内容で登録</button>
@@ -1311,8 +1311,7 @@ document.getElementById("regPurchaseUrl").value = "";
       document.getElementById("regPurchaseId").value = "";
 
       document.getElementById("confirmRegisterModal").style.display = "flex";
-      fetchSupplierList();
-    }
+// fetchSupplierList(); // 🌟 PRO版機能のためオフにする！    }
 
     window.closeConfirmModal = function() {
       document.getElementById("confirmRegisterModal").style.display = "none";
@@ -1374,6 +1373,18 @@ document.getElementById("regPurchaseUrl").value = "";
     };
 
     window.executeRegistration = async function() {
+      // 🌟 仕入先とURLはロックされてるのでダミーデータを送る
+      pendingRegData.supplier = "Lite版登録";
+      pendingRegData.purchaseUrl = "";
+      pendingRegData.purchaseId = "";
+
+      const btn = document.getElementById("executeRegBtn");
+      const ssUrl = AppStorage.get("sh_ssurl", "");
+      const researcherUrl = AppStorage.get("sh_researcher_url", ""); 
+      let targetGasUrl = AppStorage.get("sh_tensite_url", "") || AppStorage.get("sh_sniper_url", "");
+
+      btn.disabled = true; btn.innerHTML = "⌛ 登録中...";
+      // (以下はそのまま) ...
       const supplier = document.getElementById("supplierSelect").value;
       if (!supplier) { return alert("仕入れ先を選択してください！"); }
 
@@ -2260,10 +2271,10 @@ document.getElementById("regPurchaseUrl").value = "";
     // ▼ 各種ボタンのアクションも、すべて販売ページへの強制ジャンプに書き換え！ ▼
     toggleDiscord = redirectToPro;       // Discord連携ボタン
     searchHistory = redirectToPro;       // 販売履歴リサーチボタン
-    sendToManager = redirectToPro;       // Managerへ仕入れ登録ボタン
+    // sendToManager = redirectToPro;       // 🌟 コメントアウトして「Managerへ仕入れ登録」を解放！
     loadInventoryPrice = redirectToPro;  // 価格改定の更新ボタン
-    loadMonthlyData = redirectToPro;     // 月別データの更新ボタン
-    // loadResearcherData = redirectToPro;  // 🌟 コメントアウトしてResearcherの更新ボタンを復活！
+    // loadMonthlyData = redirectToPro;     // 🌟 コメントアウトして「月別データ詳細」を解放！
+    // loadResearcherData = redirectToPro;  // 🌟 (既存) Researcherの更新ボタン解放
     openExpenseModal = redirectToPro;    // ヘッダーの経費ボタン
     updateKeepaInventory = redirectToPro;// Keepa在庫更新ボタン
 
@@ -2273,7 +2284,6 @@ document.getElementById("regPurchaseUrl").value = "";
       setTimeout(() => btn.style.transform = "rotate(0deg)", 500); 
       if (typeof syncPatrolData === 'function') syncPatrolData();      // 🌟 追加：手動リロードでWatcher更新
       if (typeof fetchDashboardData === 'function') fetchDashboardData();  // 🌟 追加：手動リロードで赤丸更新
-      if (typeof syncPatrolData === 'function') syncPatrolData(); // 🌟 ここにも追加！
     };
 // ==========================================
     // 🚀 お試し版専用：ホーム画面の画像切り替えシステム
