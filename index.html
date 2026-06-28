@@ -2237,7 +2237,7 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
     // ▼ 画面の切り替えシステム（openView）を根こそぎ乗っ取る！ ▼
     const originalOpenView = openView;
     openView = function(viewId, isBack = false) {
-      // 🔓 「月別データ（view-monthly）」をここに追加して解放する！
+      // 🔓 ここや！「&& viewId !== 'view-monthly'」を足して月別データを通すようにしたで！
       if (viewId !== 'view-home' && viewId !== 'view-amazon' && viewId !== 'view-watcher' && viewId !== 'view-researcher' && viewId !== 'view-monthly') {
         redirectToPro();
         return;
