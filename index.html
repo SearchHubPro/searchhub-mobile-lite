@@ -2157,6 +2157,19 @@ document.getElementById("regPurchaseUrl").value = "";
 
     // ▼ これが超重要！元の「グラフを描画する処理」を無効化して、画像が消えるのを防ぐ ▼
     updateHomeView = function() {};
+   // ▼ アプリ起動時に自動で赤丸チェック ▼
+    window.addEventListener('load', () => {
+      setTimeout(() => { 
+        fetchDashboardData(); 
+      }, 500); // 念のため、設定URLなどを読み込んだ0.5秒後に通信
+    });
+
+    // ▼ 他のアプリやバックグラウンドから戻ってきた瞬間に自動で赤丸チェック ▼
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        fetchDashboardData();
+      }
+    });
   </script>
 </body>
 </html>
