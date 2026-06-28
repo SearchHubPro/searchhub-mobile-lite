@@ -1582,20 +1582,40 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
       if(!selMonth || selMonth === "データなし") return;
       
       const isPurchase = (currentMonthlyTab === 'monthly-purchase');
-      const targetArr = isPurchase ? globalMonthlyData.purchase : globalMonthlyData.sales;
-      const monthData = targetArr.find(d => d.month === selMonth);
       const sumDiv = document.getElementById('monthly-summary');
+
+      // 👑 【追加】販売タブが選ばれたら、問答無用でPRO版ロック画面を出す！
+      if (!isPurchase) {
+        sumDiv.innerHTML = `
+        <div class="card" style="text-align:center; padding:40px 20px; border-top:4px solid #d69e2e; background: linear-gradient(135deg, #fffcf5 0%, #ffffff 100%);">
+           <i class="fas fa-lock" style="font-size:40px; color:#d69e2e; margin-bottom:16px;"></i>
+           <div style="font-size:16px; font-weight:bold; color:#744210; margin-bottom:12px;">販売データの集計・分析</div>
+           <div style="font-size:13px; color:#975a16; line-height:1.6;">
+             ここから先の販売管理は <span style="background:#f6e05e; color:#744210; padding:2px 8px; border-radius:4px; font-weight:bold;">👑 PRO版 限定</span> やで！<br><br>
+             日々の売上、Amazon手数料、経費、純利益の<br>自動集計はPRO版で完全解放されます🔒
+           </div>
+        </div>`;
+        
+        // リストとページネーション（次へボタン等）も隠してスッキリさせる
+        document.getElementById('monthly-sales-list').innerHTML = "";
+        document.getElementById('monthly-pagination').style.display = 'none';
+        return; // ここで処理を終わらせて、下のコードには行かせへん！
+      }
+      
+      // ▼ 以降は「仕入れタブ」の処理（あんたが作ってくれたコードそのまま！） ▼
+      const targetArr = globalMonthlyData.purchase;
+      const monthData = targetArr.find(d => d.month === selMonth);
       
       if (!monthData) {
         sumDiv.innerHTML = `<div class="card" style="text-align:center; color:#a0aec0; padding:20px;">${selMonth} のデータはありません。</div>`;
-        document.getElementById(isPurchase ? 'monthly-purchase-list' : 'monthly-sales-list').innerHTML = "";
-        document.getElementById('monthly-pagination').style.display = 'none'; return;
+        document.getElementById('monthly-purchase-list').innerHTML = "";
+        document.getElementById('monthly-pagination').style.display = 'none'; 
+        return;
       }
       
       let margin = monthData.sales > 0 ? Math.round((monthData.profit / monthData.sales) * 100) : 0;
       
-      if (isPurchase) {
-        sumDiv.innerHTML = `
+      sumDiv.innerHTML = `
         <div class="card" style="border-top:4px solid #3182ce;">
            <div style="font-size:13px; font-weight:bold; color:#4a5568; margin-bottom:12px; display:flex; justify-content:space-between;">
              <span><i class="fas fa-box-open" style="color:#2b6cb0;"></i> 仕入合計</span>
@@ -1626,49 +1646,9 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
              <span style="font-size:20px; font-weight:900; color:${monthData.profit >= 0 ? '#38a169' : '#e53e3e'};">¥${Number(monthData.profit).toLocaleString()} <span style="font-size:14px;">(${margin}%)</span></span>
            </div>
         </div>`;
-      } else {
-        const expense = monthData.expense || 0; 
-        const netProfit = monthData.profit - expense; 
-        const netMargin = monthData.sales > 0 ? Math.round((netProfit / monthData.sales) * 100) : 0;
-
-        // 💡 【ここを追加！】補填で黒字（マイナス経費）の時は緑色でプラス表示にする！
-        const expDisplay = expense < 0 
-          ? `<span style="font-size:14px; font-weight:bold; color:#07A27B;">+¥${Math.abs(expense).toLocaleString()} (補填等プラス)</span>`
-          : `<span style="font-size:14px; font-weight:bold; color:#e53e3e;">-¥${Number(expense).toLocaleString()}</span>`;
-
-        sumDiv.innerHTML = `
-        <div class="card" style="border-top:4px solid #e53e3e;">
-           <div style="font-size:13px; font-weight:bold; color:#4a5568; margin-bottom:12px; display:flex; justify-content:space-between;">
-             <span><i class="fas fa-hand-holding-usd" style="color:#d93025;"></i> 販売合計 (${monthData.count}件)</span>
-             <span style="color:#718096;">${monthData.month}</span>
-           </div>
-           <div style="display:flex; justify-content:space-between; margin-bottom:6px; border-bottom:1px dashed #e2e8f0; padding-bottom:4px;">
-             <span style="font-size:11px; color:#4a5568;">総販売額</span>
-             <span style="font-size:14px; font-weight:bold; color:#2d3748;">¥${Number(monthData.sales).toLocaleString()}</span>
-           </div>
-           <div style="display:flex; justify-content:space-between; margin-bottom:6px; border-bottom:1px dashed #e2e8f0; padding-bottom:4px;">
-             <span style="font-size:11px; color:#4a5568;">配送料合計</span>
-             <span style="font-size:14px; font-weight:bold; color:#2d3748;">¥${Number(monthData.shipping).toLocaleString()}</span>
-           </div>
-           <div style="display:flex; justify-content:space-between; margin-bottom:6px; border-bottom:1px dashed #e2e8f0; padding-bottom:4px;">
-             <span style="font-size:11px; color:#4a5568;">販売手数料等合計</span>
-             <span style="font-size:14px; font-weight:bold; color:#2d3748;">¥${Number(monthData.fee).toLocaleString()}</span>
-           </div>
-           <div style="display:flex; justify-content:space-between; margin-bottom:6px; border-bottom:1px dashed #e2e8f0; padding-bottom:4px;">
-             <span style="font-size:11px; color:#4a5568;">仕入原価合計</span>
-             <span style="font-size:14px; font-weight:bold; color:#2d3748;">¥${Number(monthData.cost).toLocaleString()}</span>
-           </div>
-           <div style="display:flex; justify-content:space-between; margin-bottom:12px; border-bottom:1px dashed #e2e8f0; padding-bottom:4px;">
-             <span style="font-size:11px; color:#4a5568;">諸経費合計</span>
-             ${expDisplay}  </div>
-           
-           <div style="background:${netProfit >= 0 ? '#f0fff4' : '#fff5f5'}; border:1px solid ${netProfit >= 0 ? '#c6f6d5' : '#fed7d7'}; padding:12px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
-             <span style="font-size:12px; font-weight:bold; color:#4a5568;">純利益 (利益率)</span>
-             <span style="font-size:20px; font-weight:900; color:${netProfit >= 0 ? '#38a169' : '#e53e3e'};">¥${Number(netProfit).toLocaleString()} <span style="font-size:14px;">(${netMargin}%)</span></span>
-           </div>
-        </div>`;
-      }
-      monthlyCurrentPage = 1; renderMonthlyList();
+        
+      monthlyCurrentPage = 1; 
+      renderMonthlyList();
     }
 
     function renderMonthlyList() {
