@@ -1373,7 +1373,7 @@ document.getElementById("regPurchaseUrl").value = "";
     };
 
     window.executeRegistration = async function() {
-      // 🌟 仕入先とURLはロックされてるのでダミーデータを送る
+      // 🌟 Lite版仕様：仕入先とURLはロックされてるのでダミーデータを裏でセットする
       pendingRegData.supplier = "Lite版登録";
       pendingRegData.purchaseUrl = "";
       pendingRegData.purchaseId = "";
@@ -1383,50 +1383,40 @@ document.getElementById("regPurchaseUrl").value = "";
       const researcherUrl = AppStorage.get("sh_researcher_url", ""); 
       let targetGasUrl = AppStorage.get("sh_tensite_url", "") || AppStorage.get("sh_sniper_url", "");
 
-      btn.disabled = true; btn.innerHTML = "⌛ 登録中...";
-      // (以下はそのまま) ...
-      const supplier = document.getElementById("supplierSelect").value;
-      if (!supplier) { return alert("仕入れ先を選択してください！"); }
+      btn.disabled = true; 
+      btn.innerHTML = "⌛ 登録中...";
 
-      pendingRegData.supplier = supplier;
-
-      pendingRegData.purchaseUrl = document.getElementById("regPurchaseUrl").value.trim();
-      pendingRegData.purchaseId = document.getElementById("regPurchaseId").value.trim();
-
-      const btn = document.getElementById("executeRegBtn");
-      
-      // 👇 ここから修正：ResearcherのURLを取得
-      const ssUrl = AppStorage.get("sh_ssurl", "");
-      const researcherUrl = AppStorage.get("sh_researcher_url", ""); // 🌟 追加
-      let targetGasUrl = AppStorage.get("sh_tensite_url", "") || AppStorage.get("sh_sniper_url", "");
-
-      btn.disabled = true; btn.innerHTML = "⌛ 登録中...";
       try {
         const res = await fetch(targetGasUrl, { 
           method: 'POST', 
-          // 👇 GASに送るボディ部分に researcherUrl を追加
           body: JSON.stringify({ 
             command: 'register', 
             ssUrl: ssUrl, 
-            researcherUrl: researcherUrl, // 🌟 追加
+            researcherUrl: researcherUrl,
             data: pendingRegData 
           }) 
         });
+        
         const resJson = await res.json();
         
         if (resJson.success) {
-          btn.style.background = "#38a169"; btn.innerHTML = "✅ 登録完了！";
+          btn.style.background = "#38a169"; 
+          btn.innerHTML = "✅ 登録完了！";
           setTimeout(() => {
             closeConfirmModal();
-            btn.style.background = "#1a365d"; btn.innerHTML = "この内容で登録"; btn.disabled = false;
+            btn.style.background = "#1a365d"; 
+            btn.innerHTML = "この内容で登録"; 
+            btn.disabled = false;
           }, 1500);
         } else {
           alert("登録失敗: " + resJson.message);
-          btn.disabled = false; btn.innerHTML = "🚀 再試行";
+          btn.disabled = false; 
+          btn.innerHTML = "🚀 再試行";
         }
       } catch(err) {
         alert("通信エラーが発生しました");
-        btn.disabled = false; btn.innerHTML = "🚀 再試行";
+        btn.disabled = false; 
+        btn.innerHTML = "🚀 再試行";
       }
     }
 
