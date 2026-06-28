@@ -857,20 +857,29 @@
         if (res10 && !res10.error && res10.sites) Object.assign(mergedSites, res10.sites);
         document.getElementById("lastUpdate").innerText = "最終更新: " + Utilities_formatDate(new Date());
         globalHistoryData = mergedSites;
-        for (const [divId, gasSiteName] of Object.entries(siteKeyMap)) {
+       for (const [divId, gasSiteName] of Object.entries(siteKeyMap)) {
           const container = document.getElementById(divId);
           const currentItems = globalHistoryData[gasSiteName] || []; container.innerHTML = "";
-          if (currentItems.length === 0) {
+          
+          // 🌟 修正1: 「あり」が含まれているアイテムだけを抽出する
+          const filteredItems = currentItems.filter(item => item.status && item.status.includes("あり"));
+
+          if (filteredItems.length === 0) {
             container.innerHTML = '<div class="no-data">「' + gasSiteName.replace(/^S/, '') + '」に現在、新着・利益商品は見つかっていません。</div>';
           } else {
-            currentItems.forEach(function(item) {
+            filteredItems.forEach(function(item) {
               const uniqueKey = item.url + "_" + item.status; 
-              const isNew = item.status.includes("あり") && !item.status.includes("変化なし");
+              // 抽出した時点で「あり」だけになってるけど、変化なしを除外する条件はそのまま残す
+              const isNew = !item.status.includes("変化なし");
               const isRead = globalViewedLinks.includes(uniqueKey);
+              
               const card = document.createElement("div");
               card.className = "card" + (isRead ? " read-card" : "") + (isNew && !isRead ? " is-new-item" : "");
+              
+              // 🌟 修正2: <span class="price-tag"> を丸ごと削除して金額を非表示に！
               let htmlStr = '<div class="item-title"><a href="' + item.url + '" target="_blank" data-key="' + uniqueKey + '" onclick="markAsRead(this)">💎 ' + escapeHtml(item.title) + '</a></div>' +
-                '<div class="item-meta"><span class="status-tag">' + escapeHtml(item.status) + '</span><span class="price-tag">' + escapeHtml(item.price) + '</span></div>';
+                '<div class="item-meta"><span class="status-tag">' + escapeHtml(item.status) + '</span></div>';
+              
               if (item.asin && item.asin !== "undefined") {
                 htmlStr += '<div style="margin-top:10px; border-top:1px dashed #e2e8f0; padding-top:10px;">' +
                   '<button class="auto-asin-btn" data-key="' + uniqueKey + '" onclick="markAsRead(this); openView(\'view-amazon\'); jumpToAmazonResearch(\'' + escapeHtml(item.asin) + '\', \'' + escapeHtml(item.title) + '\')">' +
@@ -2142,6 +2151,7 @@ document.getElementById("regPurchaseUrl").value = "";
       setTimeout(() => btn.style.transform = "rotate(0deg)", 500); 
       if (typeof syncPatrolData === 'function') syncPatrolData();      // 🌟 追加：手動リロードでWatcher更新
       if (typeof fetchDashboardData === 'function') fetchDashboardData();  // 🌟 追加：手動リロードで赤丸更新
+      if (typeof syncPatrolData === 'function') syncPatrolData(); // 🌟 ここにも追加！
     };
 // ==========================================
     // 🚀 お試し版専用：ホーム画面の画像切り替えシステム
@@ -2166,21 +2176,19 @@ document.getElementById("regPurchaseUrl").value = "";
 
     // ▼ これが超重要！元の「グラフを描画する処理」を無効化して、画像が消えるのを防ぐ ▼
     updateHomeView = function() {};
-   // ▼ アプリ起動時の「最初の1発目」を確実に自動で取りに行く（0.8秒待つのがミソ） ▼
+   // ▼ アプリ起動時の「最初の1発目」を確実に自動で取りに行く ▼
     window.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
-        if (typeof fetchDashboardData === 'function') {
-          fetchDashboardData();
-        }
+        if (typeof fetchDashboardData === 'function') fetchDashboardData();
+        if (typeof syncPatrolData === 'function') syncPatrolData(); // 🌟 Watcherの自動更新を追加！
       }, 800); 
     });
 
     // ▼ アプリを裏（バックグラウンド）から戻した時にも自動チェック ▼
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
-        if (typeof fetchDashboardData === 'function') {
-          fetchDashboardData();
-        }
+        if (typeof fetchDashboardData === 'function') fetchDashboardData();
+        if (typeof syncPatrolData === 'function') syncPatrolData(); // 🌟 Watcherの自動更新を追加！
       }
     });
   </script>
