@@ -2112,6 +2112,13 @@ document.getElementById("regPurchaseUrl").value = "";
       }
       // 許可された画面なら通常通り移動
       originalOpenView(viewId, isBack);
+
+      // 🌟【有料版仕様：爆速赤丸連動】ホーム画面が開いた瞬間に裏で赤丸チェック！
+      if (viewId === 'view-home') {
+        if (typeof fetchDashboardData === 'function') {
+          fetchDashboardData();
+        }
+      }
     };
 
     // ▼ 裏側の不要な通信処理は完全に沈黙させる ▼
@@ -2129,10 +2136,12 @@ document.getElementById("regPurchaseUrl").value = "";
     openExpenseModal = redirectToPro;    // ヘッダーの経費ボタン
     updateKeepaInventory = redirectToPro;// Keepa在庫更新ボタン
 
-    // リロードボタンはクルッと回る演出だけ残しておく（押した感触用）
+    // ▼ リロードボタンを押した時にちゃんと通信するように復活させる！ ▼
     forceReload = function(btn) { 
       btn.style.transform = "rotate(360deg)"; 
       setTimeout(() => btn.style.transform = "rotate(0deg)", 500); 
+      if (typeof syncPatrolData === 'function') syncPatrolData();      // 🌟 追加：手動リロードでWatcher更新
+      if (typeof fetchDashboardData === 'function') fetchDashboardData();  // 🌟 追加：手動リロードで赤丸更新
     };
 // ==========================================
     // 🚀 お試し版専用：ホーム画面の画像切り替えシステム
