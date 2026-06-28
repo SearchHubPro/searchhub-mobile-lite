@@ -1296,7 +1296,6 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
         sellPrice: sPrice,
         title: window.tmpTitle || "",
         model: window.tmpModel || "",
-        // 👇 この2行を追加！（GASにFBA料と手数料の数字を送る）
         fbaFee: window.tmpFbaFee || 0,
         fee: Math.floor(sPrice * ((window.tmpFeePercent || 10) / 100))
       };
@@ -1307,11 +1306,12 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
          <b>経費/送料:</b> ¥${Number(ePrice).toLocaleString()}<br>
          <b>販売値:</b> ¥${Number(sPrice).toLocaleString()}`;
 
-document.getElementById("regPurchaseUrl").value = "";
+      document.getElementById("regPurchaseUrl").value = "";
       document.getElementById("regPurchaseId").value = "";
 
       document.getElementById("confirmRegisterModal").style.display = "flex";
-// fetchSupplierList(); // 🌟 PRO版機能のためオフにする！    }
+      // fetchSupplierList(); // 🌟 PRO版機能のためオフにする！
+    } // 👈 閉じカッコをコメントの外（次の行）に救出！！！
 
     window.closeConfirmModal = function() {
       document.getElementById("confirmRegisterModal").style.display = "none";
