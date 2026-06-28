@@ -1540,12 +1540,29 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
 
     async function loadMonthlyData() {
       const ssUrl = AppStorage.get("sh_ssurl", "");
+      const researcherUrl = AppStorage.get("sh_researcher_url", ""); // 🌟 追加：ResearcherのURLを取得
       let targetGasUrl = AppStorage.get("sh_tensite_url", "") || AppStorage.get("sh_sniper_url", "");
-      if (!ssUrl || !targetGasUrl) { openConfig(); return alert("⚙️設定から『販売管理シートURL』と『GAS URL』を登録してな！"); }
+      
+      // 💡 修正：Manager(ssUrl)が空っぽでも、ResearcherのURLがあればOKにする！
+      if (!(ssUrl || researcherUrl) || !targetGasUrl) { 
+        openConfig(); 
+        return alert("⚙️設定から『シートのURL』と『GAS URL』を登録してな！"); 
+      }
+      
       document.getElementById('monthly-summary').innerHTML = '<div class="loading-spinner">⌛ 最新の月別データを集計中...</div>';
+      
       try {
-        const res = await fetch(targetGasUrl, { method: 'POST', body: JSON.stringify({ command: 'getMonthlyData', ssUrl: ssUrl }) });
+        // 💡 修正：GASに送るデータの中に researcherUrl も混ぜてあげる！
+        const res = await fetch(targetGasUrl, { 
+          method: 'POST', 
+          body: JSON.stringify({ 
+            command: 'getMonthlyData', 
+            ssUrl: ssUrl,
+            researcherUrl: researcherUrl // 🌟 ここが超重要！
+          }) 
+        });
         const json = await res.json();
+        
         if (!json.success) { document.getElementById('monthly-summary').innerHTML = '<div class="card" style="color:red; text-align:center;">エラー: ' + json.message + '</div>'; return; }
         globalMonthlyData = json.data;
         let allMonths = new Set();
@@ -1555,7 +1572,9 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
         if(monthArr.length === 0) { sel.innerHTML = "<option>データなし</option>"; document.getElementById('monthly-summary').innerHTML = ""; return; }
         monthArr.forEach(m => { let opt = document.createElement('option'); opt.value = m; opt.innerText = m; sel.appendChild(opt); });
         renderMonthlyData();
-      } catch (err) { document.getElementById('monthly-summary').innerHTML = '<div class="card" style="color:red; text-align:center;">通信エラーが発生しました。</div>'; }
+      } catch (err) { 
+        document.getElementById('monthly-summary').innerHTML = '<div class="card" style="color:red; text-align:center;">通信エラーが発生しました。</div>'; 
+      }
     }
 
    function renderMonthlyData() {
