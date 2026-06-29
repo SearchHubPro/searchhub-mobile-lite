@@ -203,18 +203,6 @@
       <div id="homeMonthTabsArea" style="display:none;"></div>
     </div>
 
-    <div style="padding: 0 16px 12px 16px;">
-      <a href="https://line.me/R/ti/p/@561rubmr?oat_content=url&ts=05162137" target="_blank" style="display: flex; align-items: center; justify-content: space-between; background: #ffffff; border: 1.5px solid #06C755; text-decoration: none; padding: 12px 16px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: opacity 0.2s;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <i class="fab fa-line" style="color: #06C755; font-size: 28px;"></i>
-          <div style="display: flex; flex-direction: column;">
-            <span style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 2px;">公式LINEで最新情報をGET</span>
-            <span style="font-size: 10px; color: #666; font-weight: bold;">アップデートやPRO版のご案内はこちら</span>
-          </div>
-        </div>
-        <i class="fas fa-chevron-right" style="color: #06C755; font-size: 14px;"></i>
-      </a>
-    </div>
     <div class="dashboard-grid">
       <button class="dash-btn" onclick="openView('view-amazon')"><i class="fab fa-amazon" style="color:#ff9900;"></i>リサーチ</button>
       <button class="dash-btn" onclick="openView('view-researcher'); loadResearcherData();"><i class="fas fa-clipboard-check" style="color:#a855f7;"></i>Researcher精査<span class="dash-dot" id="dash-dot-researcher"></span></button>
@@ -429,24 +417,17 @@
       <label>Keepa APIキー</label>
       <input type="text" id="cfgKeepa" placeholder="あなたのKeepaAPIキー">
       
-      <label style="color: #2b6cb0; margin-top: 15px;">🔗 SearchHub : Researcher LiteのURL</label>
+      <label style="color: #2b6cb0; margin-top: 15px;">🔗 SearchHub   Mobile LiteのURL</label>
       <input type="url" id="cfgResearcherUrl" placeholder="https://docs.google.com/spreadsheets/...">
 
-      <label style="color: #07A27B; margin-top: 15px;">🔗 SearchHub : Researcher LiteのGASURL</label>
+      <label style="color: #07A27B; margin-top: 15px;">🔗 SearchHub   Mobile LiteのGASURL</label>
       <input type="url" id="cfgGasUrl" placeholder="https://script.google.com/macros/s/.../exec">
 
       <div class="modal-actions" style="margin-top:24px;">
         <button style="background:#e2e8f0; color:#4a5568;" onclick="closeConfig()">閉じる</button>
         <button style="background:#1a365d; color:white;" onclick="saveConfig()">設定を保存</button>
       </div>
-      
-      <div style="margin-top: 20px; text-align: center; border-top: 1px dashed #e2e8f0; padding-top: 15px;">
-        <div style="font-size: 11px; color: #4a5568; margin-bottom: 10px; font-weight: bold;">💡 アップデート情報・PRO版の案内はこちら</div>
-        <a href="https://lin.ee/yqLpbzZ" target="_blank" style="display: flex; justify-content: center; align-items: center; gap: 8px; background: #06C755; color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);">
-          <i class="fab fa-line" style="font-size: 18px;"></i> 公式LINEを友だち追加
-        </a>
-      </div>
-      </div>
+    </div>
   </div>
 
   <div id="confirmRegisterModal" class="modal">
