@@ -183,17 +183,23 @@
         </div>
         
         <div class="tutorial-slide">
-          <div class="tutorial-img" style="background:#e6f9ed; color:#06C755;"><i class="fas fa-key"></i></div>
-          <div class="tutorial-title">⚠️機能を解放するには</div>
-          <div class="tutorial-desc" style="font-weight:bold;">これらの機能を連動させて使うには、専用のGoogleシート（無料）が必要です。<br><br>公式LINEに登録して、設定マニュアルと専用シートを受け取ってください！</div>
+          <div class="tutorial-img" style="background:#fffaf0; color:#e67e22; border: 1px solid #ffe4b5;"><i class="fas fa-rocket"></i></div>
+          <div class="tutorial-title">🚀 全ての機能を解放しよう！</div>
+          <div class="tutorial-desc" style="font-weight:bold; text-align:left; padding: 0 10px;">
+             以下の便利な追加機能も、完全無料で使えるようになります。<br>
+             <ul style="margin-top:10px; padding-left:20px; line-height:1.6;">
+               <li>自動リサーチ機能</li>
+               <li>ヤフオク検索機能</li>
+               <li>仕入れ商品登録機能</li>
+             </ul>
+          </div>
           <div class="tutorial-dots">
             <div class="tut-dot"></div><div class="tut-dot"></div><div class="tut-dot active"></div>
           </div>
-          <a href="https://searchhubpro.github.io/searchhub-line/" target="_blank" class="tutorial-btn line-btn" style="display:block; text-decoration:none; box-sizing:border-box;" onclick="finishTutorial()">🟢 LINEで機能解放する</a>
-          <button onclick="finishTutorial()" style="background:none; border:none; color:#a0aec0; font-size:11px; margin-top:15px; text-decoration:underline; padding:10px;">すでに設定済み・後でする</button>
+          <a href="https://searchhubpro.github.io/searchhub-line2/" target="_blank" class="tutorial-btn" style="background:#e67e22; display:block; text-decoration:none; box-sizing:border-box;" onclick="finishTutorial()">🔓 全機能を無料で解放する</a>
+          <button onclick="finishTutorial()" style="background:none; border:none; color:#a0aec0; font-size:11px; margin-top:15px; text-decoration:underline; padding:10px;">あとで解放する</button>
         </div>
-
-      </div>
+        </div>
     </div>
   </div>
 
@@ -220,6 +226,7 @@
     <a href="https://searchhubpro.github.io/searchhub-line2/" target="_blank" style="display: block; margin: 16px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
       <img src="https://i.ibb.co/sph8L9kt/image.png" alt="全ての機能を解放しよう" style="width: 100%; height: auto; display: block;">
     </a>
+
     <div class="dashboard-grid">
       <button class="dash-btn" onclick="openView('view-amazon')"><i class="fab fa-amazon" style="color:#ff9900;"></i>リサーチ</button>
       <button class="dash-btn" onclick="openView('view-researcher'); loadResearcherData();"><i class="fas fa-clipboard-check" style="color:#a855f7;"></i>Researcher精査<span class="dash-dot" id="dash-dot-researcher"></span></button>
