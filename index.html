@@ -12,12 +12,8 @@
   <meta name="apple-mobile-web-app-title" content="SearchHub">
   <meta name="theme-color" content="#ffffff">
   
-  <link rel="apple-touch-icon-precomposed" href="https://i.ibb.co/Zz8Zt6pJ/Gemini-Generated-Image-h7bz8oh7bz8oh7bz-2.jpg
-
-">
-  <link rel="shortcut icon" href="https://i.ibb.co/Zz8Zt6pJ/Gemini-Generated-Image-h7bz8oh7bz8oh7bz-2.jpg
-
-">
+  <link rel="apple-touch-icon-precomposed" href="https://i.ibb.co/Zz8Zt6pJ/Gemini-Generated-Image-h7bz8oh7bz8oh7bz-2.jpg">
+  <link rel="shortcut icon" href="https://i.ibb.co/Zz8Zt6pJ/Gemini-Generated-Image-h7bz8oh7bz8oh7bz-2.jpg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
@@ -50,38 +46,6 @@
     .view { display: none; }
     .view.active { display: block; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* --- 新ホーム画面（グラフ＆ダッシュボード） --- */
-    .graph-card { background: #ffffff; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin: 16px; border: 1px solid #d5d9d9; min-height: 290px; }
-    .home-top-tabs { display: flex; justify-content: flex-start; gap: 4px; margin-bottom: 12px; border-bottom: 1px solid #d5d9d9; }
-    .home-tab-btn { padding: 8px 12px; border: none; font-size: 13px; font-weight: bold; background: transparent; color: #565959; cursor: pointer; border-bottom: 3px solid transparent; flex: 1; text-align: center; }
-    .home-tab-btn.active { color: #008296; border-bottom: 3px solid #008296; }
-    .summary-header { margin-bottom: 16px; height: 50px; }
-    .summary-date { font-size: 11px; color: #565959; margin-bottom: 4px; font-weight:bold; }
-    .summary-values { display: flex; gap: 20px; align-items: flex-end; }
-    .summary-box .summary-label { font-size: 10px; color: #565959; margin-bottom: 2px; }
-    .summary-box .summary-value { font-size: 20px; font-weight: 900; color: #0f1111; line-height: 1; }
-    .summary-box .summary-value.highlight { color: #E47911; }
-    .chart-wrapper { height: 200px; width: 100%; position: relative; }
-    
-    #homeMonthTabsArea { display: flex; overflow-x: auto; gap: 8px; margin-top: 16px; padding-bottom: 8px; }
-    #homeMonthTabsArea::-webkit-scrollbar { display: none; }
-    .home-month-btn { padding: 6px 16px; border: 1px solid #d5d9d9; border-radius: 20px; background: #ffffff; color: #0f1111; font-size: 12px; white-space: nowrap; cursor: pointer; }
-    .home-month-btn.active { background: #f3fbfd; border-color: #008296; color: #008296; font-weight: bold; }
-
-    /* 円グラフ（回転率） */
-    .turnover-container { display: grid; grid-template-columns: 1.2fr 1fr; gap: 10px; align-items: center; height: 210px; }
-    .metrics-list { display: flex; flex-direction: column; gap: 6px; }
-    .metric-item { display: flex; justify-content: space-between; font-size: 11px; color: #565959; border-bottom: 1px dashed #eee; padding-bottom: 2px; }
-    .metric-value { font-weight: bold; color: #0f1111; }
-    .metric-value.profit { color: #E47911; }
-    .chart-box { position: relative; display: flex; justify-content: center; align-items: center; }
-    .circular-chart { width: 140px; height: 140px; }
-    .circle-bg { fill: none; stroke: #e6e6e6; stroke-width: 3.8; }
-    .circle-base { fill: none; stroke: #008296; stroke-width: 3.8; stroke-linecap: round; transition: stroke-dasharray 1s ease-out; }
-    .circle-over { fill: none; stroke: #E47911; stroke-width: 3.8; stroke-linecap: round; transition: stroke-dasharray 1s ease-out 0.5s; }
-    .percentage { position: absolute; font-family: 'Roboto', sans-serif; font-size: 28px; font-weight: 900; color: #0f1111; display: flex; flex-direction: column; align-items: center; }
-    .percentage span { font-size: 10px; color: #565959; margin-top: -5px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
 
     /* 下部ボタン群のリファイン */
     .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px 20px 16px; }
@@ -154,8 +118,40 @@
     .modal-actions { display: flex; gap: 8px; margin-top: 20px; }
     .modal-actions button { flex: 1; padding: 10px; border: none; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; }
     
-    /* 🚀 ステップ②: 引っ張って更新の見た目追加 */
     #ptr-indicator { position: fixed; top: -50px; left: 0; width: 100%; text-align: center; z-index: 1000; transition: top 0.3s; font-weight: bold; color: #008296; font-size: 13px; background: rgba(255,255,255,0.95); padding: 10px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 0 0 12px 12px; pointer-events: none;}
+    
+    /* 🚀 チュートリアル用のスタイル */
+    #tutorialModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; }
+    .tutorial-content { background: white; width: 90%; max-width: 350px; border-radius: 16px; overflow: hidden; position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    .tutorial-slides { display: flex; width: 300%; transition: transform 0.4s ease-in-out; }
+    
+    /* 💡 上の隙間を減らして画像を上に詰める */
+    .tutorial-slide { width: 33.333%; padding: 20px 20px 30px; text-align: center; box-sizing: border-box; }
+    
+    .tutorial-img { width: 80px; height: 80px; margin: 0 auto 20px; background: #ebf8ff; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 35px; color: #2b6cb0; }
+    
+    /* 💡 画像を限界までデカくして、下のボタンをグッと押し下げる魔法！ */
+    .tut-square-img { 
+        width: 100%; 
+        max-width: 100%; 
+        height: auto; 
+        margin: -10px auto 40px; 
+        display: block; 
+        object-fit: contain;
+        border: none;       
+        box-shadow: none;   
+    }
+    
+    .tutorial-title { font-size: 18px; font-weight: bold; color: #1a365d; margin-bottom: 12px; line-height: 1.4; }
+    .tutorial-desc { font-size: 13px; color: #4a5568; line-height: 1.6; margin-bottom: 20px; }
+    .tutorial-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+    .tut-dot { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e0; transition: background 0.3s; }
+    .tut-dot.active { background: #2b6cb0; }
+    
+    /* 💡 ボタンも少し大きくして押しやすく！ */
+    .tutorial-btn { background: #1a73e8; color: white; border: none; padding: 14px 24px; border-radius: 25px; font-weight: bold; font-size: 15px; width: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.1s; }
+    .tutorial-btn:active { transform: scale(0.95); }
+    .tutorial-btn.line-btn { background: #06C755; margin-top: 10px; font-size: 15px; }
   </style>
 </head>
 <body>
@@ -164,6 +160,41 @@
   <div id="loader">
     <img class="splash-img" src="https://i.ibb.co/R49z2pwV/Chat-GPT-Image-2026-5-31-20-50-12.png" alt="Splash">
     <div class="splash-text">SYSTEM LOADING...</div>
+  </div>
+
+  <div id="tutorialModal">
+    <div class="tutorial-content">
+      <div class="tutorial-slides" id="tutSlides">
+        
+        <div class="tutorial-slide">
+          <img src="https://i.ibb.co/zWSwPD41/1.png" class="tut-square-img" alt="チュートリアル1">
+          <div class="tutorial-dots">
+            <div class="tut-dot active"></div><div class="tut-dot"></div><div class="tut-dot"></div>
+          </div>
+          <button class="tutorial-btn" onclick="nextSlide(1)">次へ 👉</button>
+        </div>
+        
+        <div class="tutorial-slide">
+          <img src="https://i.ibb.co/vCm1f0hW/2.png" class="tut-square-img" alt="チュートリアル2">
+          <div class="tutorial-dots">
+            <div class="tut-dot"></div><div class="tut-dot active"></div><div class="tut-dot"></div>
+          </div>
+          <button class="tutorial-btn" onclick="nextSlide(2)">次へ 👉</button>
+        </div>
+        
+        <div class="tutorial-slide">
+          <div class="tutorial-img" style="background:#e6f9ed; color:#06C755;"><i class="fas fa-key"></i></div>
+          <div class="tutorial-title">⚠️機能を解放するには</div>
+          <div class="tutorial-desc" style="font-weight:bold;">これらの機能を連動させて使うには、専用のGoogleシート（無料）が必要です。<br><br>公式LINEに登録して、設定マニュアルと専用シートを受け取ってください！</div>
+          <div class="tutorial-dots">
+            <div class="tut-dot"></div><div class="tut-dot"></div><div class="tut-dot active"></div>
+          </div>
+          <a href="https://searchhubpro.github.io/searchhub-line/" target="_blank" class="tutorial-btn line-btn" style="display:block; text-decoration:none; box-sizing:border-box;" onclick="finishTutorial()">🟢 LINEで機能解放する</a>
+          <button onclick="finishTutorial()" style="background:none; border:none; color:#a0aec0; font-size:11px; margin-top:15px; text-decoration:underline; padding:10px;">すでに設定済み・後でする</button>
+        </div>
+
+      </div>
+    </div>
   </div>
 
   <div class="header-wrapper">
@@ -185,36 +216,11 @@
   </div>
 
   <div id="view-home" class="view active">
-    <div class="graph-card" style="padding: 12px;">
-      <div class="home-top-tabs">
-        <button class="home-tab-btn active" onclick="switchHomeTab('turnover', this)">回転率</button>
-        <button class="home-tab-btn" onclick="switchHomeTab('purchase', this)">仕入</button>
-        <button class="home-tab-btn" onclick="switchHomeTab('sales', this)">販売</button>
-      </div>
-      
-      <div id="homeGraphContent">
-        <img id="demoGraphImg" src="https://i.ibb.co/gbGLK8FH/S-371744773-0.jpg" alt="デモ画像" style="width:100%; border-radius:8px; display:block; border:1px solid #e2e8f0; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
-        
-        <div style="text-align:center; font-size:12px; color:#e53e3e; font-weight:bold; margin-top:12px;">
-          🔒 製品版ではリアルタイムでグラフ化！
-        </div>
-      </div>
-      
-      <div id="homeMonthTabsArea" style="display:none;"></div>
-    </div>
+    
+    <a href="https://lin.ee/yqLpbzZ" target="_blank" style="display: block; margin: 16px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
+      <img src="https://i.ibb.co/8LSnzzxn/image.png" alt="初期設定動画を見る" style="width: 100%; height: auto; display: block;">
+    </a>
 
-    <div style="padding: 0 16px 12px 16px;">
-      <a href="https://line.me/R/ti/p/@561rubmr?oat_content=url&ts=05162137" target="_blank" style="display: flex; align-items: center; justify-content: space-between; background: #ffffff; border: 1.5px solid #06C755; text-decoration: none; padding: 12px 16px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: opacity 0.2s;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <i class="fab fa-line" style="color: #06C755; font-size: 28px;"></i>
-          <div style="display: flex; flex-direction: column;">
-            <span style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 2px;">公式LINEで最新情報をGET</span>
-            <span style="font-size: 10px; color: #666; font-weight: bold;">アップデートやPRO版のご案内はこちら</span>
-          </div>
-        </div>
-        <i class="fas fa-chevron-right" style="color: #06C755; font-size: 14px;"></i>
-      </a>
-    </div>
     <div class="dashboard-grid">
       <button class="dash-btn" onclick="openView('view-amazon')"><i class="fab fa-amazon" style="color:#ff9900;"></i>リサーチ</button>
       <button class="dash-btn" onclick="openView('view-researcher'); loadResearcherData();"><i class="fas fa-clipboard-check" style="color:#a855f7;"></i>Researcher精査<span class="dash-dot" id="dash-dot-researcher"></span></button>
@@ -522,6 +528,38 @@
       sales: { labelBar: '日別 販売額', labelLine: '累計 確定利益', barColor: '#008296', lineColor: '#38a169' }
     };
 
+    // ==========================================
+    // 🚀 チュートリアル機能のJS
+    // ==========================================
+    function checkTutorial() {
+      // 記憶を確認
+      const hasSeen = AppStorage.get("sh_tutorial_seen", "false");
+      if (hasSeen === "false") {
+        // まだ見てない場合はスライドを表示
+        document.getElementById('tutorialModal').style.display = 'flex';
+      }
+    }
+
+    function nextSlide(currentIndex) {
+      const slidesContainer = document.getElementById('tutSlides');
+      slidesContainer.style.transform = `translateX(-${currentIndex * 33.333}%)`;
+    }
+
+    function finishTutorial() {
+      document.getElementById('tutorialModal').style.display = 'none';
+      // 見たことを記憶させる！
+      AppStorage.set("sh_tutorial_seen", "true");
+      
+      // 🌟 チュートリアルが終わった後に設定画面を出す
+      const keepaKey = AppStorage.get("sh_keepa", "");
+      if(!keepaKey) {
+        document.getElementById("lastUpdate").innerText = "設定未完了"; 
+        openConfig();
+      } else {
+        document.getElementById("lastUpdate").innerText = "準備完了"; 
+      }
+    }
+
     async function fetchDashboardData() {
       // 🌟 ManagerのURL(ssUrl)チェックを削除し、ResearcherのURLだけで通信するように修正！
       const resUrl = AppStorage.get("sh_researcher_url", ""); 
@@ -555,139 +593,12 @@
       }
     }
 
-    function updateHomeView() {
-      const contentArea = document.getElementById('homeGraphContent');
-      const monthArea = document.getElementById('homeMonthTabsArea');
-      
-      if (currentHomeMode === 'turnover') {
-        monthArea.style.display = 'none';
-        contentArea.innerHTML = `
-          <div class="turnover-container">
-            <div class="metrics-list">
-              <div style="font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #008296;">本日(${homeData.today.dateStr})の仕入れ</div>
-              <div class="metric-item"><span>仕入れ額</span><span class="metric-value">¥${homeData.today.buyAmount.toLocaleString()}</span></div>
-              <div class="metric-item"><span>想定販売額</span><span class="metric-value">¥${homeData.today.estSales.toLocaleString()}</span></div>
-              <div class="metric-item"><span>仕入れ個数</span><span class="metric-value">${homeData.today.buyCount} 個</span></div>
-              <div class="metric-item"><span>想定利益額</span><span class="metric-value profit">¥${homeData.today.estProfit.toLocaleString()}</span></div>
-              <div class="metric-item"><span>利益率</span><span class="metric-value">${homeData.today.profitRate} %</span></div>
-              <div class="metric-item"><span>ROI</span><span class="metric-value">${homeData.today.roi} %</span></div>
-            </div>
-            <div class="chart-box">
-              <svg viewBox="0 0 36 36" class="circular-chart">
-                <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                <path class="circle-base" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                <path class="circle-over" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-              </svg>
-              <div class="percentage">
-                <span id="turnoverText" style="font-size: 28px; color: #0f1111; margin:0;">0%</span>
-                <span>回転率</span>
-              </div>
-            </div>
-          </div>
-        `;
-        setTimeout(() => { drawTurnoverChart(homeData.turnover.value); }, 50);
-      } else {
-        monthArea.style.display = 'flex';
-        const config = chartConfig[currentHomeMode];
-        const monthDataObj = homeData.monthly[currentHomeMonth] ? homeData.monthly[currentHomeMonth][currentHomeMode] : null;
-        
-        if (!monthDataObj) {
-           contentArea.innerHTML = `<div style="text-align:center; padding:30px; color:#a0aec0; font-size:12px;">データがありません</div>`;
-           return;
-        }
-
-        // 💡 利益率の計算を追加！
-        const marginStr = currentHomeMode === 'purchase' 
-  ? (monthDataObj.totalEstSales > 0 ? Math.round((monthDataObj.totalLine / monthDataObj.totalEstSales) * 100) : 0)
-  : (monthDataObj.totalBar > 0 ? Math.round((monthDataObj.totalLine / monthDataObj.totalBar) * 100) : 0);
-        const profitLabel = currentHomeMode === 'purchase' ? '想定利益' : '確定利益';
-        const marginLabel = currentHomeMode === 'purchase' ? '想定利益率' : '利益率';
-
-        contentArea.innerHTML = `
-          <div class="summary-header">
-            <div class="summary-date">${currentHomeMonth.split('/')[1]}月${monthDataObj.lastDataDay}日 時点</div>
-            <div class="summary-values">
-              <div class="summary-box">
-                <div class="summary-label">合計 ${currentHomeMode==='purchase'?'仕入':'販売'}</div>
-                <div class="summary-value">¥${monthDataObj.totalBar.toLocaleString()}</div>
-              </div>
-              <div class="summary-box">
-                <div class="summary-label">${profitLabel}</div>
-                <div class="summary-value highlight">¥${monthDataObj.totalLine.toLocaleString()}</div>
-              </div>
-              <div class="summary-box">
-                <div class="summary-label">${marginLabel}</div>
-                <div class="summary-value" style="color:#008296;">${marginStr}%</div>
-              </div>
-            </div>
-          </div>
-          <div class="chart-wrapper">
-            <canvas id="mainChart"></canvas>
-          </div>
-        `;
-        const ctx = document.getElementById('mainChart').getContext('2d');
-        const days = Array.from({length: monthDataObj.bars.length}, (_, i) => i + 1);
-        if (homeChartInstance) { homeChartInstance.destroy(); }
-        homeChartInstance = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: days,
-            datasets: [
-              { type: 'line', label: config.labelLine, data: monthDataObj.lines, borderColor: config.lineColor, backgroundColor: config.lineColor, yAxisID: 'y1', pointRadius: 1, tension: 0.2, borderWidth: 2, order: 1, spanGaps: true },
-              { type: 'bar', label: config.labelBar, data: monthDataObj.bars, backgroundColor: config.barColor, yAxisID: 'y', borderRadius: 2, order: 2 }
-            ]
-          },
-          options: {
-            responsive: true, maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            plugins: { legend: { display: false } },
-            scales: {
-              x: { grid: { display: false }, ticks: { maxTicksLimit: 15, font: { size: 10 } } },
-              y: { position: 'left', beginAtZero: true, grid: { color: '#f0f2f2' }, ticks: { color: config.barColor, font: { size: 10 }, callback: v => '¥'+v.toLocaleString() }, title: { display: true, text: config.labelBar, color: config.barColor, font: { size: 10, weight: 'bold' } } },
-              y1: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { color: config.lineColor, font: { size: 10 }, callback: v => '¥'+v.toLocaleString() }, title: { display: true, text: config.labelLine, color: config.lineColor, font: { size: 10, weight: 'bold' } } }
-            }
-          }
-        });
-      }
-    }
-
-    function switchHomeTab(mode, btn) {
-      document.querySelectorAll('.home-tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentHomeMode = mode;
-      updateHomeView();
-    }
-
-    function switchHomeMonth(month, btn) {
-      document.querySelectorAll('.home-month-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentHomeMonth = month;
-      updateHomeView();
-    }
-
-    function drawTurnoverChart(percent) {
-      const baseCircle = document.querySelector('.circle-base');
-      const overCircle = document.querySelector('.circle-over');
-      const textLabel = document.getElementById('turnoverText');
-      if(!baseCircle) return;
-      textLabel.innerText = percent + '%';
-      if (percent <= 100) {
-          baseCircle.setAttribute('stroke-dasharray', `${percent}, 100`);
-          overCircle.setAttribute('stroke-dasharray', `0, 100`);
-      } else {
-          baseCircle.setAttribute('stroke-dasharray', `100, 100`);
-          let overVal = percent % 100;
-          if (overVal === 0) overVal = 100;
-          overCircle.setAttribute('stroke-dasharray', `${overVal}, 100`);
-      }
-    }
-
     function hideLoader() {
       const loader = document.getElementById("loader");
       if (loader && loader.style.display !== "none") {
         
-        document.body.style.backgroundColor = "#f0f2f5"; // 👈 消え始める瞬間に裏地をグレーにする！
-        loader.style.opacity = "0"; // 👈 ここから0.5秒かけてローディングが透けていく
+        document.body.style.backgroundColor = "#f0f2f5"; 
+        loader.style.opacity = "0"; 
         
         setTimeout(() => { 
           loader.style.display = "none"; 
@@ -844,13 +755,23 @@
         window.scrollTo(0, parseInt(savedScroll, 10)); 
       }, 100);
 
-      // ▼ 修正：Keepa APIの登録だけをチェックして起動させる ▼
-      const keepaKey = AppStorage.get("sh_keepa", "");
-      if(!keepaKey) {
-        setTimeout(() => { hideLoader(); document.getElementById("lastUpdate").innerText = "設定未完了"; openConfig(); }, 1500);
-      } else {
-        setTimeout(() => { hideLoader(); document.getElementById("lastUpdate").innerText = "準備完了"; }, 800);
-      }
+      // ▼ 修正：チュートリアルを【最優先】で起動させる ▼
+      setTimeout(() => { 
+        hideLoader(); 
+        const hasSeen = AppStorage.get("sh_tutorial_seen", "false");
+        if (hasSeen === "false") {
+          checkTutorial(); // まだ見てない人は絶対チュートリアルから！
+        } else {
+          // すでに見た人は設定の確認へ
+          const keepaKey = AppStorage.get("sh_keepa", "");
+          if(!keepaKey) {
+            document.getElementById("lastUpdate").innerText = "設定未完了"; 
+            openConfig(); 
+          } else {
+            document.getElementById("lastUpdate").innerText = "準備完了"; 
+          }
+        }
+      }, 800);
     });
 
     // ▼ 修正：画面切り替え時のGAS通信を完全ストップ ▼
@@ -1304,20 +1225,23 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
     let pendingRegData = {};
 
     window.sendToManager = function(asin) {
+      // 🌟 Lite版仕様：仕入先とURLはロックされてるのでダミーデータを裏でセットする
+      pendingRegData.supplier = "Lite版登録";
+      pendingRegData.purchaseUrl = "";
+      pendingRegData.purchaseId = "";
+
       const bPrice = document.getElementById("bPrice").value || 0;
       const ePrice = document.getElementById("ePrice").value || 0;
       const sPrice = document.getElementById("sPrice").value || 0;
 
-      pendingRegData = { 
-        asin: asin, 
-        buyPrice: bPrice, 
-        shipping: ePrice, 
-        sellPrice: sPrice,
-        title: window.tmpTitle || "",
-        model: window.tmpModel || "",
-        fbaFee: window.tmpFbaFee || 0,
-        fee: Math.floor(sPrice * ((window.tmpFeePercent || 10) / 100))
-      };
+      pendingRegData.asin = asin;
+      pendingRegData.buyPrice = bPrice;
+      pendingRegData.shipping = ePrice;
+      pendingRegData.sellPrice = sPrice;
+      pendingRegData.title = window.tmpTitle || "";
+      pendingRegData.model = window.tmpModel || "";
+      pendingRegData.fbaFee = window.tmpFbaFee || 0;
+      pendingRegData.fee = Math.floor(sPrice * ((window.tmpFeePercent || 10) / 100));
 
       document.getElementById("confirmDetails").innerHTML = 
         `<b>ASIN:</b> ${asin}<br>
@@ -1330,7 +1254,7 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
 
       document.getElementById("confirmRegisterModal").style.display = "flex";
       // fetchSupplierList(); // 🌟 PRO版機能のためオフにする！
-    } // 👈 閉じカッコをコメントの外（次の行）に救出！！！
+    } 
 
     window.closeConfirmModal = function() {
       document.getElementById("confirmRegisterModal").style.display = "none";
@@ -1392,11 +1316,6 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
     };
 
     window.executeRegistration = async function() {
-      // 🌟 Lite版仕様：仕入先とURLはロックされてるのでダミーデータを裏でセットする
-      pendingRegData.supplier = "Lite版登録";
-      pendingRegData.purchaseUrl = "";
-      pendingRegData.purchaseId = "";
-
       const btn = document.getElementById("executeRegBtn");
       const ssUrl = AppStorage.get("sh_ssurl", "");
       const researcherUrl = AppStorage.get("sh_researcher_url", ""); 
@@ -1559,10 +1478,9 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
 
     async function loadMonthlyData() {
       const ssUrl = AppStorage.get("sh_ssurl", "");
-      const researcherUrl = AppStorage.get("sh_researcher_url", ""); // 🌟 追加：ResearcherのURLを取得
+      const researcherUrl = AppStorage.get("sh_researcher_url", ""); 
       let targetGasUrl = AppStorage.get("sh_tensite_url", "") || AppStorage.get("sh_sniper_url", "");
       
-      // 💡 修正：Manager(ssUrl)が空っぽでも、ResearcherのURLがあればOKにする！
       if (!(ssUrl || researcherUrl) || !targetGasUrl) { 
         openConfig(); 
         return alert("⚙️設定から『シートのURL』と『GAS URL』を登録してな！"); 
@@ -1571,13 +1489,12 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
       document.getElementById('monthly-summary').innerHTML = '<div class="loading-spinner">⌛ 最新の月別データを集計中...</div>';
       
       try {
-        // 💡 修正：GASに送るデータの中に researcherUrl も混ぜてあげる！
         const res = await fetch(targetGasUrl, { 
           method: 'POST', 
           body: JSON.stringify({ 
             command: 'getMonthlyData', 
             ssUrl: ssUrl,
-            researcherUrl: researcherUrl // 🌟 ここが超重要！
+            researcherUrl: researcherUrl 
           }) 
         });
         const json = await res.json();
@@ -1615,13 +1532,11 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
            </div>
         </div>`;
         
-        // リストとページネーション（次へボタン等）も隠してスッキリさせる
         document.getElementById('monthly-sales-list').innerHTML = "";
         document.getElementById('monthly-pagination').style.display = 'none';
-        return; // ここで処理を終わらせて、下のコードには行かせへん！
+        return; 
       }
       
-      // ▼ 以降は「仕入れタブ」の処理（あんたが作ってくれたコードそのまま！） ▼
       const targetArr = globalMonthlyData.purchase;
       const monthData = targetArr.find(d => d.month === selMonth);
       
@@ -2089,8 +2004,8 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
 
       reader.readAsText(file);
     }
-　　
-　　async function updateKeepaInventory() {
+  
+  async function updateKeepaInventory() {
       const btn = document.getElementById('keepaBtn');
       if(btn) { btn.disabled = true; btn.innerText = "更新中..."; }
 
@@ -2316,11 +2231,28 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
 
     // ▼ これが超重要！元の「グラフを描画する処理」を無効化して、画像が消えるのを防ぐ ▼
     updateHomeView = function() {};
-   // ▼ アプリ起動時の「最初の1発目」を確実に自動で取りに行く ▼
+
+    // ▼ アプリ起動時の制御（修正箇所：チュートリアルを最優先！） ▼
     window.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
-        if (typeof fetchDashboardData === 'function') fetchDashboardData();
-        if (typeof syncPatrolData === 'function') syncPatrolData(); // 🌟 Watcherの自動更新を追加！
+        hideLoader(); 
+        const hasSeen = AppStorage.get("sh_tutorial_seen", "false");
+        
+        if (hasSeen === "false") {
+          // 🌟 チュートリアルを見てない人は強制的にチュートリアルから！
+          checkTutorial(); 
+        } else {
+          // 🌟 チュートリアルを見たことある人は初期設定のチェックへ
+          const keepaKey = AppStorage.get("sh_keepa", "");
+          if(!keepaKey) {
+            document.getElementById("lastUpdate").innerText = "設定未完了"; 
+            openConfig(); 
+          } else {
+            document.getElementById("lastUpdate").innerText = "準備完了"; 
+            if (typeof fetchDashboardData === 'function') fetchDashboardData();
+            if (typeof syncPatrolData === 'function') syncPatrolData(); 
+          }
+        }
       }, 800); 
     });
 
@@ -2328,7 +2260,7 @@ saveAmazonHistory({ kw: asin, title: productTitle, img: imageUrl, rank: rank, rC
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
         if (typeof fetchDashboardData === 'function') fetchDashboardData();
-        if (typeof syncPatrolData === 'function') syncPatrolData(); // 🌟 Watcherの自動更新を追加！
+        if (typeof syncPatrolData === 'function') syncPatrolData(); 
       }
     });
   </script>
