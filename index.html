@@ -199,7 +199,8 @@
           <a href="https://searchhubpro.github.io/searchhub-line2/" target="_blank" class="tutorial-btn" style="background:#e67e22; display:block; text-decoration:none; box-sizing:border-box;" onclick="finishTutorial()">🔓 全機能を無料で解放する</a>
           <button onclick="finishTutorial()" style="background:none; border:none; color:#a0aec0; font-size:11px; margin-top:15px; text-decoration:underline; padding:10px;">あとで解放する</button>
         </div>
-        </div>
+
+      </div>
     </div>
   </div>
 
@@ -226,6 +227,13 @@
     <a href="https://searchhubpro.github.io/searchhub-line2/" target="_blank" style="display: block; margin: 16px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'">
       <img src="https://i.ibb.co/sph8L9kt/image.png" alt="全ての機能を解放しよう" style="width: 100%; height: auto; display: block;">
     </a>
+
+    <!-- ▼ 追加：クイックスタートガイド ▼ -->
+    <div style="margin: 0 16px 16px 16px; background: #ebf8ff; border: 2px solid #bee3f8; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+      <div style="font-size: 14px; font-weight: 900; color: #2b6cb0; margin-bottom: 8px;">👇 まずはここから無料体験！ 👇</div>
+      <div style="font-size: 12px; color: #4a5568; font-weight: bold; line-height: 1.5;">左上の「リサーチ」ボタンから、<br>気になる商品の利益計算を試してみましょう！</div>
+    </div>
+    <!-- ▲ 追加ここまで ▲ -->
 
     <div class="dashboard-grid">
       <button class="dash-btn" onclick="openView('view-amazon')"><i class="fab fa-amazon" style="color:#ff9900;"></i>リサーチ</button>
@@ -452,12 +460,14 @@
         <button style="background:#1a365d; color:white;" onclick="saveConfig()">設定を保存</button>
       </div>
       
+      <!-- ▼ 変更：LINEのボタンをマニュアル・機能解放ページへ書き換え ▼ -->
       <div style="margin-top: 20px; text-align: center; border-top: 1px dashed #e2e8f0; padding-top: 15px;">
-        <div style="font-size: 11px; color: #4a5568; margin-bottom: 10px; font-weight: bold;">💡 アップデート情報・PRO版の案内はこちら</div>
-        <a href="https://lin.ee/yqLpbzZ" target="_blank" style="display: flex; justify-content: center; align-items: center; gap: 8px; background: #06C755; color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.15);">
-          <i class="fab fa-line" style="font-size: 18px;"></i> 公式LINEを友だち追加
+        <div style="font-size: 12px; color: #4a5568; margin-bottom: 12px; font-weight: bold;">📖 ツールの詳しい使い方・設定方法はこちら</div>
+        <a href="https://searchhubpro.github.io/searchhub-line2/" target="_blank" style="display: flex; justify-content: center; align-items: center; gap: 8px; background: #2b6cb0; color: white; text-decoration: none; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: background 0.2s;">
+          <i class="fas fa-book"></i> マニュアル ＆ 全機能解放ページへ
         </a>
       </div>
+      <!-- ▲ 変更ここまで ▲ -->
       </div>
   </div>
 
@@ -976,7 +986,7 @@
       const y = date.getFullYear(); const m = ('0' + (date.getMonth() + 1)).slice(-2);
       const d = ('0' + date.getDate()).slice(-2); const h = ('0' + date.getHours()).slice(-2);
       const min = ('0' + date.getMinutes()).slice(-2);
-      return `${y}/${m}/${d} ${h}:${min}`;
+      return `${y}/${m}/${d} h:${min}`;
     }
     function escapeHtml(str) { if(!str) return ""; return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
     function openManager() { const url = AppStorage.get("sh_ssurl", ""); if (!url) { openConfig(); return alert("⚙️設定から販売管理シートのURLを設定してな！"); } window.open(url, "_blank"); }
